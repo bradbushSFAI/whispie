@@ -4,6 +4,21 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
+function getBaseUrl(): string {
+  // Use explicit env var if set
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    return process.env.NEXT_PUBLIC_SITE_URL
+  }
+
+  // In production, construct from Vercel's automatic env vars
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`
+  }
+
+  // Fallback to production URL
+  return 'https://whispie.vercel.app'
+}
+
 export async function login(formData: FormData) {
   const supabase = await createClient()
 
@@ -42,11 +57,12 @@ export async function signup(formData: FormData) {
 
 export async function signInWithGoogle() {
   const supabase = await createClient()
+  const baseUrl = getBaseUrl()
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/callback`,
+      redirectTo: `${baseUrl}/auth/callback`,
     },
   })
 
