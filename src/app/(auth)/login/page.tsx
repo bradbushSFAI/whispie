@@ -38,7 +38,7 @@ function LoginForm() {
     <Card className="w-full max-w-md">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
-        <CardDescription>
+        <CardDescription className="text-slate-600">
           Sign in to continue practicing conversations
         </CardDescription>
       </CardHeader>
