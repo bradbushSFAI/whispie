@@ -169,9 +169,16 @@ export async function POST(
     }
 
     return NextResponse.json({ analysis })
-  } catch (error) {
-    console.error('Analysis generation error:', error)
-    return NextResponse.json({ error: 'Failed to generate analysis' }, { status: 500 })
+  } catch (error: unknown) {
+    const err = error as Error & { status?: number; statusText?: string }
+    console.error('[analyze] Gemini error:', {
+      message: err?.message,
+      status: err?.status,
+      statusText: err?.statusText,
+      name: err?.name,
+      stack: err?.stack?.slice(0, 500),
+    })
+    return NextResponse.json({ error: err?.message || 'Failed to generate analysis' }, { status: 500 })
   }
 }
 

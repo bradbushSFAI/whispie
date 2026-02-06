@@ -102,14 +102,15 @@ export function AnalysisView({
       })
 
       if (!response.ok) {
-        throw new Error('Failed to generate analysis')
+        const data = await response.json().catch(() => null)
+        throw new Error(data?.error || 'Failed to generate analysis')
       }
 
       const data = await response.json()
       setAnalysis(data.analysis)
     } catch (err) {
       console.error('Analysis error:', err)
-      setError('Failed to generate analysis. Please try again.')
+      setError(err instanceof Error ? err.message : 'Failed to generate analysis. Please try again.')
     } finally {
       setIsLoading(false)
     }
@@ -137,12 +138,20 @@ export function AnalysisView({
     return (
       <div className="min-h-screen bg-background-dark flex flex-col items-center justify-center p-6">
         <p className="text-red-400 font-bold text-lg mb-4">{error}</p>
-        <button
-          onClick={generateAnalysis}
-          className="bg-whispie-primary text-background-dark font-bold px-6 py-3 rounded-xl"
-        >
-          Try Again
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={() => router.push('/scenarios')}
+            className="bg-white/10 hover:bg-white/20 text-white font-bold px-6 py-3 rounded-xl transition-colors"
+          >
+            Back to Menu
+          </button>
+          <button
+            onClick={generateAnalysis}
+            className="bg-whispie-primary text-background-dark font-bold px-6 py-3 rounded-xl"
+          >
+            Try Again
+          </button>
+        </div>
       </div>
     )
   }
