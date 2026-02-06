@@ -72,8 +72,15 @@ export async function POST(
     role: msg.role === 'user' ? 'user' : 'model',
     parts: [{ text: msg.content }],
   }))
-  const firstUserIdx = allHistory.findIndex((msg) => msg.role === 'user')
-  const chatHistory = firstUserIdx >= 0 ? allHistory.slice(firstUserIdx) : []
+
+  // If the first message is from the AI (opening line), prepend a synthetic
+  // user turn so Gemini's user-first requirement is met while keeping the
+  // opening in context for conversation coherence.
+  if (allHistory.length > 0 && allHistory[0].role === 'model') {
+    allHistory.unshift({ role: 'user', parts: [{ text: '[Conversation started]' }] })
+  }
+
+  const chatHistory = allHistory
 
   // Add user message to history if provided
   if (userMessage) {
