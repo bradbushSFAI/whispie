@@ -238,7 +238,7 @@ export function ChatInterface({
       <main className="flex-1 overflow-y-auto p-4 space-y-6">
         {/* Scenario Context */}
         <div className="flex justify-center my-4">
-          <span className="text-xs font-semibold text-slate-400 dark:text-slate-600 bg-slate-100 dark:bg-white/5 px-3 py-1 rounded-full">
+          <span className="text-xs font-semibold text-slate-400 dark:text-slate-300 bg-slate-100 dark:bg-white/5 px-3 py-1 rounded-full">
             {scenario.title}
           </span>
         </div>

@@ -34,7 +34,7 @@ export default async function UpgradePage({
           </Link>
           <Link
             href="/dashboard"
-            className="text-sm text-slate-400 hover:text-white transition-colors"
+            className="text-sm text-slate-300 hover:text-white transition-colors"
           >
             Back to Dashboard
           </Link>
@@ -62,7 +62,7 @@ export default async function UpgradePage({
               ? "You've reached your monthly limit"
               : 'This is a Pro scenario'}
           </h1>
-          <p className="text-slate-400 mb-8">
+          <p className="text-slate-300 mb-8">
             {isRateLimited
               ? `You've used ${profile?.scenarios_used_this_month || 3} of 3 free scenarios this month. Upgrade to Pro for unlimited practice.`
               : 'This premium scenario requires a Pro subscription to access.'}
@@ -74,7 +74,7 @@ export default async function UpgradePage({
               <h2 className="text-lg font-bold text-white">Whispie Pro</h2>
               <div className="text-right">
                 <span className="text-2xl font-bold text-white">$12</span>
-                <span className="text-slate-400">/mo</span>
+                <span className="text-slate-300">/mo</span>
               </div>
             </div>
             <ul className="space-y-3">
@@ -103,7 +103,7 @@ export default async function UpgradePage({
             >
               Coming Soon
             </button>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-400">
               Payment integration launching soon. Sign up to be notified!
             </p>
           </div>
@@ -112,7 +112,7 @@ export default async function UpgradePage({
           <div className="mt-8">
             <Link
               href="/scenarios"
-              className="text-sm text-slate-400 hover:text-white transition-colors"
+              className="text-sm text-slate-300 hover:text-white transition-colors"
             >
               Browse free scenarios instead
             </Link>

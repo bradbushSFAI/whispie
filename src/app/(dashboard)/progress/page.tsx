@@ -102,7 +102,7 @@ export default async function ProgressPage() {
             </div>
             <div className="text-right">
               <p className="text-3xl font-bold text-white">{xp}</p>
-              <p className="text-sm text-slate-400">Total XP</p>
+              <p className="text-sm text-slate-300">Total XP</p>
             </div>
           </div>
           <div className="h-3 bg-white/10 rounded-full overflow-hidden">
@@ -112,8 +112,8 @@ export default async function ProgressPage() {
             />
           </div>
           <div className="flex justify-between mt-2">
-            <p className="text-xs text-slate-400">{xpForLevel(level)} XP</p>
-            <p className="text-xs text-slate-400">{nextLevelXp} XP</p>
+            <p className="text-xs text-slate-300">{xpForLevel(level)} XP</p>
+            <p className="text-xs text-slate-300">{nextLevelXp} XP</p>
           </div>
         </div>
 
@@ -125,11 +125,11 @@ export default async function ProgressPage() {
               <span className="text-3xl">🔥</span>
               <div>
                 <p className="text-3xl font-bold text-white">{currentStreak}</p>
-                <p className="text-xs text-slate-400">Day Streak</p>
+                <p className="text-xs text-slate-300">Day Streak</p>
               </div>
             </div>
             <p className="text-sm text-whispie-primary">{streakMessage(currentStreak)}</p>
-            <p className="text-xs text-slate-500 mt-2">Best: {longestStreak} days</p>
+            <p className="text-xs text-slate-400 mt-2">Best: {longestStreak} days</p>
           </div>
 
           {/* Conversations */}
@@ -138,10 +138,10 @@ export default async function ProgressPage() {
               <span className="text-3xl">💬</span>
               <div>
                 <p className="text-3xl font-bold text-white">{totalConversations}</p>
-                <p className="text-xs text-slate-400">Conversations</p>
+                <p className="text-xs text-slate-300">Conversations</p>
               </div>
             </div>
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-slate-300">
               {totalConversations > 0
                 ? `${Math.round((userAchievements?.length || 0) / (achievements?.length || 1) * 100)}% achievements unlocked`
                 : 'Start practicing!'}
@@ -166,12 +166,12 @@ export default async function ProgressPage() {
                         }`}
                         style={{ height: `${score}%` }}
                       />
-                      <span className="text-[10px] text-slate-500">{score}</span>
+                      <span className="text-[10px] text-slate-400">{score}</span>
                     </div>
                   )
                 })}
               </div>
-              <p className="text-xs text-slate-500 text-center mt-3">Last {recentAnalyses.length} conversations</p>
+              <p className="text-xs text-slate-400 text-center mt-3">Last {recentAnalyses.length} conversations</p>
             </div>
           </div>
         )}
@@ -184,7 +184,7 @@ export default async function ProgressPage() {
 
           {Object.entries(achievementsByCategory).map(([category, categoryAchievements]) => (
             <div key={category} className="mb-6">
-              <h4 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">
+              <h4 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-3">
                 {categoryLabels[category] || category}
               </h4>
               <div className="grid grid-cols-2 gap-3">
@@ -204,14 +204,14 @@ export default async function ProgressPage() {
                           {achievement.icon}
                         </span>
                         <div className="flex-1 min-w-0">
-                          <p className={`font-bold text-sm truncate ${isUnlocked ? 'text-white' : 'text-slate-500'}`}>
+                          <p className={`font-bold text-sm truncate ${isUnlocked ? 'text-white' : 'text-slate-400'}`}>
                             {achievement.name}
                           </p>
-                          <p className="text-xs text-slate-500 line-clamp-2">
+                          <p className="text-xs text-slate-400 line-clamp-2">
                             {achievement.description}
                           </p>
                           {achievement.xp_reward > 0 && (
-                            <p className={`text-xs mt-1 ${isUnlocked ? 'text-whispie-primary' : 'text-slate-600'}`}>
+                            <p className={`text-xs mt-1 ${isUnlocked ? 'text-whispie-primary' : 'text-slate-400'}`}>
                               +{achievement.xp_reward} XP
                             </p>
                           )}

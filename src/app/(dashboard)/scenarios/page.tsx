@@ -75,7 +75,7 @@ export default async function ScenariosPage({
         ) : (
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <p className="text-gray-500 dark:text-gray-400">No scenarios found</p>
-            <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
+            <p className="text-sm text-gray-400 dark:text-gray-300 mt-1">
               Try selecting a different category
             </p>
           </div>

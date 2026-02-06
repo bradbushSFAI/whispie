@@ -129,7 +129,7 @@ export function AnalysisView({
       <div className="min-h-screen bg-background-dark flex flex-col items-center justify-center p-6">
         <div className="w-16 h-16 border-4 border-whispie-primary border-t-transparent rounded-full animate-spin mb-4" />
         <p className="text-white font-bold text-lg">Analyzing your conversation...</p>
-        <p className="text-slate-400 text-sm mt-2">This may take a moment</p>
+        <p className="text-slate-300 text-sm mt-2">This may take a moment</p>
       </div>
     )
   }
@@ -195,7 +195,7 @@ export function AnalysisView({
           <h2 className="text-white text-2xl font-bold leading-tight mb-2">
             {(analysis.overall_score || 0) >= 80 ? 'Great job' : (analysis.overall_score || 0) >= 60 ? 'Good effort' : 'Keep practicing'}, {userName}!
           </h2>
-          <p className="text-slate-400 text-sm leading-relaxed max-w-xs mx-auto">
+          <p className="text-slate-300 text-sm leading-relaxed max-w-xs mx-auto">
             {analysis.summary}
           </p>
         </div>
@@ -278,10 +278,10 @@ export function AnalysisView({
               </div>
               <div>
                 <h3 className="text-sm font-bold text-white">{persona.name}</h3>
-                <p className="text-xs text-slate-400">{persona.title}</p>
+                <p className="text-xs text-slate-300">{persona.title}</p>
               </div>
             </div>
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-slate-300">
               Scenario: {scenario.title}
             </p>
           </div>

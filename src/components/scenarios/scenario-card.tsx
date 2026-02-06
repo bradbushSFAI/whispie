@@ -51,7 +51,7 @@ export function ScenarioCard({ scenario }: { scenario: ScenarioWithPersona }) {
               <span className="text-xs font-semibold text-whispie-primary uppercase tracking-wider">
                 {scenario.category}
               </span>
-              <span className="text-gray-400 dark:text-gray-500 text-xs">
+              <span className="text-gray-400 dark:text-gray-400 text-xs">
                 {Math.round(estimatedMinutes)} min
               </span>
             </div>

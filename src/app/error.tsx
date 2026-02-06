@@ -17,7 +17,7 @@ export default function Error({
     <div className="min-h-screen bg-background-dark flex flex-col items-center justify-center p-6">
       <div className="text-center">
         <h2 className="text-2xl font-bold text-white mb-2">Something went wrong</h2>
-        <p className="text-slate-400 mb-6 max-w-md">
+        <p className="text-slate-300 mb-6 max-w-md">
           We encountered an unexpected error. Please try again or contact support if the problem persists.
         </p>
         <div className="flex gap-3 justify-center">

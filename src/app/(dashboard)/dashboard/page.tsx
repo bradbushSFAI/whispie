@@ -58,13 +58,13 @@ export default async function DashboardPage() {
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           <h1 className="text-xl font-bold text-whispie-primary">Whispie</h1>
           <div className="flex items-center gap-3">
-            <Link href="/progress" className="text-sm text-slate-400 hover:text-white transition-colors">
+            <Link href="/progress" className="text-sm text-slate-300 hover:text-white transition-colors">
               {profile?.display_name || user.email?.split('@')[0]}
             </Link>
             <form action="/api/auth/signout" method="post">
               <button
                 type="submit"
-                className="text-sm text-slate-400 hover:text-white transition-colors"
+                className="text-sm text-slate-300 hover:text-white transition-colors"
               >
                 Sign out
               </button>
@@ -78,12 +78,12 @@ export default async function DashboardPage() {
         <div className="bg-surface-dark rounded-2xl p-5 border border-white/5 mb-6">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <p className="text-xs text-slate-400 uppercase tracking-wider">Level {level}</p>
+              <p className="text-xs text-slate-300 uppercase tracking-wider">Level {level}</p>
               <h2 className="text-xl font-bold text-white">{levelTitle(level)}</h2>
             </div>
             <div className="text-right">
               <p className="text-2xl font-bold text-whispie-primary">{xp}</p>
-              <p className="text-xs text-slate-400">XP</p>
+              <p className="text-xs text-slate-300">XP</p>
             </div>
           </div>
           <div className="h-2 bg-white/10 rounded-full overflow-hidden">
@@ -92,7 +92,7 @@ export default async function DashboardPage() {
               style={{ width: `${progress}%` }}
             />
           </div>
-          <p className="text-xs text-slate-500 mt-2">
+          <p className="text-xs text-slate-400 mt-2">
             {nextLevelXp - xp} XP to level {level + 1}
           </p>
         </div>
@@ -121,7 +121,7 @@ export default async function DashboardPage() {
               <span className="text-2xl font-bold text-white">{currentStreak}</span>
               <span className="text-xl">{currentStreak > 0 ? '🔥' : ''}</span>
             </div>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-300">
               {streakAtRisk ? 'Streak at risk!' : 'Day Streak'}
             </p>
           </div>
@@ -131,7 +131,7 @@ export default async function DashboardPage() {
             <div className="text-2xl font-bold text-white">
               {profile?.total_conversations || 0}
             </div>
-            <p className="text-xs text-slate-400">Conversations</p>
+            <p className="text-xs text-slate-300">Conversations</p>
           </div>
 
           {/* Avg Score */}
@@ -146,7 +146,7 @@ export default async function DashboardPage() {
                   )
                 : '--'}
             </div>
-            <p className="text-xs text-slate-400">Avg Score</p>
+            <p className="text-xs text-slate-300">Avg Score</p>
           </div>
         </div>
 
@@ -154,7 +154,7 @@ export default async function DashboardPage() {
         <div className="bg-surface-dark rounded-xl p-4 border border-white/5 mb-8 flex items-center justify-between">
           <div>
             <span className="text-lg font-bold text-white">{profile?.tier === 'pro' ? 'Pro' : 'Free'} Plan</span>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-300">
               {scenariosRemaining !== null
                 ? `${scenariosRemaining} of 3 scenarios remaining this month`
                 : 'Unlimited scenarios'}

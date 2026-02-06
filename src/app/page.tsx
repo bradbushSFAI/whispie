@@ -9,7 +9,7 @@ export default function Home() {
         <div className="flex items-center gap-3">
           <Link
             href="/login"
-            className="text-sm text-slate-400 hover:text-white transition-colors"
+            className="text-sm text-slate-300 hover:text-white transition-colors"
           >
             Sign in
           </Link>
@@ -27,7 +27,7 @@ export default function Home() {
         <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-4">
           Practice difficult workplace conversations
         </h2>
-        <p className="text-lg text-slate-400 mb-8 max-w-md">
+        <p className="text-lg text-slate-300 mb-8 max-w-md">
           Your flight simulator for tough talks. Roleplay with AI personas and get real-time feedback on your communication skills.
         </p>
         <Link
@@ -36,7 +36,7 @@ export default function Home() {
         >
           Start Practicing Free
         </Link>
-        <p className="text-sm text-slate-500 mt-4">
+        <p className="text-sm text-slate-400 mt-4">
           3 free scenarios per month. No credit card required.
         </p>
       </div>
@@ -51,7 +51,7 @@ export default function Home() {
               </svg>
             </div>
             <h3 className="text-white font-bold mb-2">Realistic Scenarios</h3>
-            <p className="text-slate-400 text-sm">
+            <p className="text-slate-300 text-sm">
               Practice salary negotiations, giving feedback, handling conflict, and more.
             </p>
           </div>
@@ -62,7 +62,7 @@ export default function Home() {
               </svg>
             </div>
             <h3 className="text-white font-bold mb-2">Instant Feedback</h3>
-            <p className="text-slate-400 text-sm">
+            <p className="text-slate-300 text-sm">
               Get scored on clarity, empathy, assertiveness, and professionalism.
             </p>
           </div>
@@ -73,7 +73,7 @@ export default function Home() {
               </svg>
             </div>
             <h3 className="text-white font-bold mb-2">AI-Powered</h3>
-            <p className="text-slate-400 text-sm">
+            <p className="text-slate-300 text-sm">
               Challenging AI personas that adapt to your responses.
             </p>
           </div>
@@ -81,7 +81,7 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="px-4 py-6 text-center text-slate-500 text-sm">
+      <footer className="px-4 py-6 text-center text-slate-400 text-sm">
         <p>&copy; 2024 Whispie. All rights reserved.</p>
       </footer>
     </main>
