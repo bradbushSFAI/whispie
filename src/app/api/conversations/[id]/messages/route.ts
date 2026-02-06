@@ -67,11 +67,13 @@ export async function POST(
     })
   }
 
-  // Build chat history for Gemini
-  const chatHistory = (existingMessages || []).map((msg) => ({
+  // Build chat history for Gemini (must start with user role)
+  const allHistory = (existingMessages || []).map((msg) => ({
     role: msg.role === 'user' ? 'user' : 'model',
     parts: [{ text: msg.content }],
   }))
+  const firstUserIdx = allHistory.findIndex((msg) => msg.role === 'user')
+  const chatHistory = firstUserIdx >= 0 ? allHistory.slice(firstUserIdx) : []
 
   // Add user message to history if provided
   if (userMessage) {
