@@ -145,6 +145,10 @@ export function ChatInterface({
           if (line.startsWith('data: ')) {
             try {
               const data = JSON.parse(line.slice(6))
+              if (data.error) {
+                console.error('Server error:', data.error)
+                setStreamingContent(`Error: ${data.error}`)
+              }
               if (data.text) {
                 fullContent += data.text
                 setStreamingContent(fullContent)

@@ -50,10 +50,13 @@ export async function POST(
   // Build conversation history for Gemini
   const scenario = conversation.scenario as Scenario
   const persona = conversation.persona as Persona
+  console.log('[messages] scenario:', scenario?.id, scenario?.title)
+  console.log('[messages] persona:', persona?.id, persona?.name)
   const systemPrompt = buildSystemPrompt(persona, scenario)
 
   // If this is the first message, we need to start the conversation
   const isFirstTurn = !existingMessages || existingMessages.length === 0
+  console.log('[messages] isFirstTurn:', isFirstTurn, 'existingMessages:', existingMessages?.length, 'total_turns:', conversation.total_turns)
 
   // Save user message if provided
   if (userMessage) {
@@ -83,6 +86,8 @@ export async function POST(
   const stream = new ReadableStream({
     async start(controller) {
       try {
+        console.log('[messages] Starting Gemini chat with history length:', chatHistory.length)
+        console.log('[messages] GEMINI_API_KEY present:', !!process.env.GEMINI_API_KEY)
         const chat = model.startChat({
           generationConfig,
           history: chatHistory,
@@ -94,6 +99,7 @@ export async function POST(
           ? 'Start the conversation in character.'
           : userMessage
 
+        console.log('[messages] Sending prompt:', prompt?.slice(0, 100))
         const result = await chat.sendMessageStream(prompt)
 
         let fullResponse = ''
@@ -119,10 +125,17 @@ export async function POST(
 
         controller.enqueue(encoder.encode(`data: ${JSON.stringify({ done: true })}\n\n`))
         controller.close()
-      } catch (error) {
-        console.error('Streaming error:', error)
+      } catch (error: unknown) {
+        const err = error as Error & { status?: number; statusText?: string; message?: string }
+        console.error('[messages] Gemini streaming error:', {
+          message: err?.message,
+          status: err?.status,
+          statusText: err?.statusText,
+          name: err?.name,
+          stack: err?.stack?.slice(0, 500),
+        })
         controller.enqueue(
-          encoder.encode(`data: ${JSON.stringify({ error: 'Failed to generate response' })}\n\n`)
+          encoder.encode(`data: ${JSON.stringify({ error: err?.message || 'Failed to generate response' })}\n\n`)
         )
         controller.close()
       }
