@@ -5,15 +5,26 @@
 ## UI/Visual Issues
 
 ### Sign-in Page
-- [ ] **"Practice tough questions…" text too light** — Text is getting lost, needs more contrast
+- [x] **"Practice tough questions…" text too light** — Fixed: overrode CardDescription with text-slate-600 (commit 7ca0063)
 
 ### Onboarding
-- [ ] **"Asking manager for feedback" button not clickable** — Button appears but doesn't respond to taps
+- [x] **"Asking manager for feedback" button not clickable** — Fixed: turned suggestion box into clickable button that completes onboarding and navigates to feedback scenarios (commit fbc79bd)
 
 ### Scenario Page
-- [ ] **Category pill text too dark** — "Asking Your Manager for Feedback" on purple pill needs lighter/white text for readability
-- [ ] **Disclaimer text too dim** — "Whispie AI can make mistakes. This is practice, not real advice." needs to be brighter
+- [x] **Category pill text too dark** — Fixed: changed active pill text from text-black to text-white (commit 10723a4)
+- [x] **Disclaimer text too dim** — Fixed: increased dark mode opacity from 20% to 50% (commit 34d13c3)
 - [ ] **No intro to scenario** — Unclear how to start the conversation, needs onboarding or prompt
+
+### Chat Interface
+- [x] **Fake the AI's opening line in GUI** — Fixed: preserved AI opening in Gemini history by prepending synthetic user turn instead of slicing it off (commit e86e283)
+- [x] **Add "End Conversation" button** — Fixed: added red X button next to Send in chat footer (commit 0cf5b4a)
+
+### Analysis/Scoring
+- [x] **Analysis generation broken** — Fixed: missing RLS INSERT policy on analyses table (commit 7deb032)
+- [x] **No escape from retry loop** — Fixed: added "Back to Menu" button (commit bf55157)
+
+### Database/Supabase
+- [ ] **Audit RLS policies on ALL tables** — Found missing INSERT policy on analyses table; need to verify all tables have proper SELECT/INSERT/UPDATE/DELETE policies for user operations
 
 ---
 
