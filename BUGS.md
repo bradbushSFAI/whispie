@@ -31,9 +31,7 @@
 ## Content/Assets Needed
 
 ### Persona Images
-- [ ] **Generate persona profile pictures** — Use nano-banana-pro (Gemini) to create illustrations for each persona
-  - Personas: (list from seed data)
-  - Style: TBD (illustration? realistic? avatar?)
+- [x] **Generate persona profile pictures** — Generated flat-style illustrations via Gemini for Margaret Chen, Derek Williams, Victoria Santos. Stored in public/personas/. Migration 006 sets avatar_url. (commit 17f4bf4)
 
 ---
 
