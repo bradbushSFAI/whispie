@@ -24,7 +24,7 @@
 - [x] **No escape from retry loop** — Fixed: added "Back to Menu" button (commit bf55157)
 
 ### Database/Supabase
-- [ ] **Audit RLS policies on ALL tables** — Found missing INSERT policy on analyses table; need to verify all tables have proper SELECT/INSERT/UPDATE/DELETE policies for user operations
+- [x] **Audit RLS policies on ALL tables** — Audited all 8 tables. Only gap was missing DELETE on conversations (added migration 005). All other tables are properly secured: profiles (trigger handles INSERT), personas/scenarios/achievements (admin-only, SELECT only), messages/analyses (immutable, cascade delete), user_achievements (permanent).
 
 ---
 
