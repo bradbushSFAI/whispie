@@ -107,8 +107,8 @@ export async function POST(
       .single()
 
     if (insertError) {
-      console.error('Failed to store analysis:', insertError)
-      return NextResponse.json({ error: 'Failed to store analysis' }, { status: 500 })
+      console.error('[analyze] Failed to store analysis:', insertError.message, insertError.code, insertError.details)
+      return NextResponse.json({ error: `Failed to store analysis: ${insertError.message}` }, { status: 500 })
     }
 
     // Mark conversation as completed
