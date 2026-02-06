@@ -9,42 +9,9 @@ type ConversationWithDetails = Conversation & {
   persona: Persona
 }
 
-function ScoreCircle({ score, size = 'large' }: { score: number; size?: 'large' | 'small' }) {
+function ScoreCircle({ score }: { score: number }) {
   const circumference = 2 * Math.PI * 40
   const offset = circumference - (score / 100) * circumference
-
-  if (size === 'small') {
-    return (
-      <div className="relative w-16 h-16">
-        <svg className="w-full h-full -rotate-90">
-          <circle
-            cx="32"
-            cy="32"
-            r="28"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="4"
-            className="text-white/10"
-          />
-          <circle
-            cx="32"
-            cy="32"
-            r="28"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="4"
-            strokeDasharray={2 * Math.PI * 28}
-            strokeDashoffset={2 * Math.PI * 28 - (score / 100) * 2 * Math.PI * 28}
-            className="text-whispie-primary"
-            strokeLinecap="round"
-          />
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-lg font-bold text-white">{score}</span>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className="relative w-20 h-20">
@@ -74,6 +41,125 @@ function ScoreCircle({ score, size = 'large' }: { score: number; size?: 'large' 
       <div className="absolute inset-0 flex items-center justify-center">
         <span className="text-3xl font-bold text-white">{score}</span>
       </div>
+    </div>
+  )
+}
+
+function RadarChart({ scores }: { scores: { label: string; score: number }[] }) {
+  const cx = 120
+  const cy = 120
+  const maxR = 80
+
+  // 4 axes: top, right, bottom, left (diamond orientation)
+  const axes = [
+    { dx: 0, dy: -1 },  // top
+    { dx: 1, dy: 0 },   // right
+    { dx: 0, dy: 1 },   // bottom
+    { dx: -1, dy: 0 },  // left
+  ]
+
+  const gridLevels = [0.25, 0.5, 0.75, 1]
+
+  const getPoint = (axisIndex: number, fraction: number) => {
+    const { dx, dy } = axes[axisIndex]
+    return {
+      x: cx + dx * maxR * fraction,
+      y: cy + dy * maxR * fraction,
+    }
+  }
+
+  const gridPolygons = gridLevels.map((level) =>
+    axes.map((_, i) => getPoint(i, level)).map((p) => `${p.x},${p.y}`).join(' ')
+  )
+
+  const scorePoints = scores.map((s, i) => getPoint(i, Math.max(s.score, 5) / 100))
+  const scorePolygon = scorePoints.map((p) => `${p.x},${p.y}`).join(' ')
+
+  // Label positions offset further from the axis endpoints
+  const labelOffsets = [
+    { x: cx, y: cy - maxR - 22, anchor: 'middle' as const },       // top
+    { x: cx + maxR + 8, y: cy, anchor: 'start' as const },         // right
+    { x: cx, y: cy + maxR + 24, anchor: 'middle' as const },       // bottom
+    { x: cx - maxR - 8, y: cy, anchor: 'end' as const },           // left
+  ]
+
+  return (
+    <div className="flex flex-col items-center">
+      <svg viewBox="0 0 240 240" className="w-full max-w-[280px]">
+        {/* Grid diamonds */}
+        {gridPolygons.map((points, i) => (
+          <polygon
+            key={i}
+            points={points}
+            fill="none"
+            stroke="rgba(255,255,255,0.08)"
+            strokeWidth={i === gridLevels.length - 1 ? 1.5 : 0.75}
+          />
+        ))}
+
+        {/* Axis lines */}
+        {axes.map((_, i) => {
+          const end = getPoint(i, 1)
+          return (
+            <line
+              key={i}
+              x1={cx}
+              y1={cy}
+              x2={end.x}
+              y2={end.y}
+              stroke="rgba(255,255,255,0.08)"
+              strokeWidth={0.75}
+            />
+          )
+        })}
+
+        {/* Filled score area */}
+        <polygon
+          points={scorePolygon}
+          fill="rgba(56,224,123,0.20)"
+          stroke="#38e07b"
+          strokeWidth={2}
+          strokeLinejoin="round"
+        />
+
+        {/* Score dots */}
+        {scorePoints.map((p, i) => (
+          <circle
+            key={i}
+            cx={p.x}
+            cy={p.y}
+            r={4}
+            fill="#38e07b"
+          />
+        ))}
+
+        {/* Labels + score values */}
+        {scores.map((s, i) => {
+          const pos = labelOffsets[i]
+          return (
+            <g key={i}>
+              <text
+                x={pos.x}
+                y={pos.y - 6}
+                textAnchor={pos.anchor}
+                dominantBaseline="auto"
+                className="fill-slate-300 text-[11px] font-medium"
+              >
+                {s.label}
+              </text>
+              <text
+                x={pos.x}
+                y={pos.y + 8}
+                textAnchor={pos.anchor}
+                dominantBaseline="auto"
+                className="fill-white text-[13px] font-bold"
+              >
+                {s.score}
+              </text>
+            </g>
+          )
+        })}
+      </svg>
     </div>
   )
 }
@@ -203,21 +289,15 @@ export function AnalysisView({
         {/* Score Breakdown */}
         <div className="px-4 py-4">
           <h3 className="text-white text-lg font-bold mb-4 px-1">Score Breakdown</h3>
-          <div className="grid grid-cols-2 gap-3">
-            {[
-              { label: 'Clarity', score: analysis.clarity_score },
-              { label: 'Empathy', score: analysis.empathy_score },
-              { label: 'Assertiveness', score: analysis.assertiveness_score },
-              { label: 'Professionalism', score: analysis.professionalism_score },
-            ].map((item) => (
-              <div
-                key={item.label}
-                className="bg-surface-dark rounded-xl p-4 flex flex-col items-center border border-white/5"
-              >
-                <ScoreCircle score={item.score || 0} size="small" />
-                <span className="text-slate-300 text-sm font-medium mt-2">{item.label}</span>
-              </div>
-            ))}
+          <div className="bg-surface-dark rounded-xl p-4 border border-white/5">
+            <RadarChart
+              scores={[
+                { label: 'Clarity', score: analysis.clarity_score || 0 },
+                { label: 'Empathy', score: analysis.empathy_score || 0 },
+                { label: 'Assertiveness', score: analysis.assertiveness_score || 0 },
+                { label: 'Professionalism', score: analysis.professionalism_score || 0 },
+              ]}
+            />
           </div>
         </div>
 
