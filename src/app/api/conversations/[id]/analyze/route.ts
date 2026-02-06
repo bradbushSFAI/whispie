@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { model, generationConfig, buildAnalysisPrompt } from '@/lib/gemini'
 import { xpFromScore, calculateTotalXp, levelFromXp } from '@/lib/gamification'
 import { updateStreak } from '@/lib/gamification/streaks'
@@ -11,6 +11,7 @@ export async function POST(
 ) {
   const { id: conversationId } = await params
   const supabase = await createClient()
+  const adminDb = createServiceClient()
 
   // Verify user is authenticated
   const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -89,8 +90,8 @@ export async function POST(
       return NextResponse.json({ error: 'Failed to parse analysis' }, { status: 500 })
     }
 
-    // Store analysis in database
-    const { data: analysis, error: insertError } = await supabase
+    // Store analysis in database (use service client to bypass RLS)
+    const { data: analysis, error: insertError } = await adminDb
       .from('analyses')
       .insert({
         conversation_id: conversationId,
@@ -112,7 +113,7 @@ export async function POST(
     }
 
     // Mark conversation as completed
-    await supabase
+    await adminDb
       .from('conversations')
       .update({ status: 'completed', completed_at: new Date().toISOString() })
       .eq('id', conversationId)
@@ -141,7 +142,7 @@ export async function POST(
       const newLevel = levelFromXp(newXp)
 
       // Update profile with gamification data
-      await supabase
+      await adminDb
         .from('profiles')
         .update({
           xp: newXp,
@@ -154,7 +155,7 @@ export async function POST(
         .eq('id', user.id)
 
       // Check and award achievements
-      await checkAndAwardAchievements(supabase, user.id, {
+      await checkAndAwardAchievements(adminDb, user.id, {
         totalConversations: (currentProfile.total_conversations || 0) + 1,
         currentStreak: newStreak,
         overallScore: analysisData.overall_score || 0,
@@ -184,7 +185,7 @@ export async function POST(
 
 // Check and award achievements based on current stats
 async function checkAndAwardAchievements(
-  supabase: Awaited<ReturnType<typeof createClient>>,
+  supabase: ReturnType<typeof createServiceClient>,
   userId: string,
   stats: {
     totalConversations: number
