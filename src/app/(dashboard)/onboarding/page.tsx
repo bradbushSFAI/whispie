@@ -234,13 +234,20 @@ export default function OnboardingPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="bg-slate-100 rounded-lg p-4">
+              <button
+                onClick={() => {
+                  completeOnboarding()
+                  router.push('/scenarios?category=feedback')
+                }}
+                className="w-full text-left bg-slate-100 rounded-lg p-4 hover:bg-slate-200 transition-colors cursor-pointer"
+              >
                 <h3 className="font-medium mb-2">Suggested first scenario:</h3>
                 <p className="text-slate-600 text-sm">
                   &quot;Asking your manager for feedback&quot; - A gentle introduction to
                   workplace conversations where you practice requesting constructive feedback.
                 </p>
-              </div>
+                <p className="text-sm font-medium text-slate-900 mt-2">Tap to try it &rarr;</p>
+              </button>
 
               <div className="flex gap-3">
                 <Button variant="outline" onClick={() => setStep('experience')}>
