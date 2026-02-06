@@ -39,7 +39,7 @@ export function CategoryFilter({
             <p
               className={`text-sm font-medium capitalize ${
                 isActive
-                  ? 'text-black font-bold'
+                  ? 'text-white font-bold'
                   : 'text-gray-700 dark:text-gray-300'
               }`}
             >
