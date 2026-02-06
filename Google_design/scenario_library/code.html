@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Whispie - Scenario Library</title>
+<!-- Google Fonts: Manrope -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#38e07b",
+              "primary-dark": "#2ec268",
+              "background-light": "#f6f8f7",
+              "background-dark": "#122017",
+              "surface-light": "#ffffff",
+              "surface-dark": "#1b2b23",
+              "subtle-dark": "#25382e",
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        /* Custom scrollbar hiding for horizontal lists */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen flex flex-col antialiased transition-colors duration-200">
+<!-- Header -->
+<header class="sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-gray-200 dark:border-white/5 pt-safe-top">
+<div class="flex items-center justify-between px-4 py-3">
+<button class="flex items-center justify-center p-2 -ml-2 rounded-full text-gray-900 dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold text-gray-900 dark:text-white tracking-tight">Scenario Library</h1>
+<div class="w-10"></div> <!-- Spacer for visual balance -->
+</div>
+<!-- Search Bar -->
+<div class="px-4 pb-3">
+<div class="relative group">
+<span class="absolute inset-y-0 left-3 flex items-center text-gray-400 group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</span>
+<input class="w-full bg-white dark:bg-subtle-dark text-gray-900 dark:text-white placeholder-gray-500 text-sm rounded-xl py-2.5 pl-10 pr-4 outline-none ring-1 ring-gray-200 dark:ring-white/10 focus:ring-2 focus:ring-primary border-none shadow-sm transition-all" placeholder="Search scenarios, roles..." type="text"/>
+</div>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-2 px-4 pb-4 overflow-x-auto no-scrollbar">
+<button class="flex shrink-0 items-center justify-center gap-x-1.5 rounded-full bg-primary py-1.5 px-4 shadow-sm shadow-primary/20">
+<p class="text-black text-sm font-bold">All</p>
+</button>
+<button class="flex shrink-0 items-center justify-center gap-x-1.5 rounded-full bg-white dark:bg-subtle-dark py-1.5 px-4 ring-1 ring-gray-200 dark:ring-white/10 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<p class="text-gray-700 dark:text-gray-300 text-sm font-medium">Negotiation</p>
+</button>
+<button class="flex shrink-0 items-center justify-center gap-x-1.5 rounded-full bg-white dark:bg-subtle-dark py-1.5 px-4 ring-1 ring-gray-200 dark:ring-white/10 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<p class="text-gray-700 dark:text-gray-300 text-sm font-medium">Conflict</p>
+</button>
+<button class="flex shrink-0 items-center justify-center gap-x-1.5 rounded-full bg-white dark:bg-subtle-dark py-1.5 px-4 ring-1 ring-gray-200 dark:ring-white/10 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<p class="text-gray-700 dark:text-gray-300 text-sm font-medium">Feedback</p>
+</button>
+<button class="flex shrink-0 items-center justify-center gap-x-1.5 rounded-full bg-white dark:bg-subtle-dark py-1.5 px-4 ring-1 ring-gray-200 dark:ring-white/10 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<p class="text-gray-700 dark:text-gray-300 text-sm font-medium">Leadership</p>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 px-4 py-6 flex flex-col gap-5 overflow-y-auto pb-24">
+<!-- Section Header -->
+<div class="flex items-center justify-between">
+<h2 class="text-gray-900 dark:text-white text-lg font-bold">Recommended</h2>
+<button class="text-primary text-sm font-semibold flex items-center gap-0.5">
+                Sort by Difficulty
+                <span class="material-symbols-outlined text-[16px]">sort</span>
+</button>
+</div>
+<!-- Card 1: Negotiation (Hard) -->
+<article class="group relative flex flex-col bg-surface-light dark:bg-surface-dark rounded-2xl p-4 shadow-sm ring-1 ring-gray-100 dark:ring-white/5 overflow-hidden active:scale-[0.99] transition-transform duration-200">
+<div class="flex gap-4">
+<!-- Avatar/Image -->
+<div class="shrink-0 relative">
+<div class="w-16 h-16 rounded-xl bg-gray-200 dark:bg-subtle-dark overflow-hidden ring-1 ring-black/5 dark:ring-white/10">
+<img alt="Portrait of a serious man in a suit representing a tough manager" class="w-full h-full object-cover" data-alt="Serious business manager portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8MRRW6mmW74O3dmBiEAdOZ8HA2OzuMcp316R2XDT2CqYru4_SFrfYmZjC1agdDctv3_aNEgOFa78Snrj3n7Dq7w2K-kuxKsSmjwIlokd3saIc9CelnjwyhReUJHihbkPpDQKZTeFrc5XmfP-3TH-ZmvrznTYelr925er2qCYqKAyKRyJQLQpvb5wAxkTNT34d-pUEc3nG-GhpWcxRc2HwQ51eNdUnBtH96Qk6a7TzwNKXQ0rCgjGd6zvq48fPLZ4cNc25Da48i15f"/>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-[10px] font-bold px-2 py-0.5 rounded-full ring-2 ring-white dark:ring-surface-dark">
+                        HARD
+                    </div>
+</div>
+<!-- Content -->
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between mb-1">
+<span class="text-xs font-semibold text-primary uppercase tracking-wider">Negotiation</span>
+<span class="text-gray-400 dark:text-gray-500 text-xs">15 min</span>
+</div>
+<h3 class="text-gray-900 dark:text-white font-bold text-lg leading-tight truncate mb-1">Salary Negotiation</h3>
+<p class="text-gray-500 dark:text-gray-400 text-sm leading-snug line-clamp-2 mb-2">
+                        Practice asking for a raise with "The Stone Wall", a manager who rarely gives in.
+                    </p>
+<div class="flex items-center justify-between mt-3">
+<div class="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-[14px]">smart_toy</span>
+<span>Marcus (The Skeptic)</span>
+</div>
+<button class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-black shadow-lg shadow-primary/20 hover:bg-primary-dark transition-colors">
+<span class="material-symbols-outlined text-[20px] ml-0.5">play_arrow</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 2: Conflict (Medium) -->
+<article class="group relative flex flex-col bg-surface-light dark:bg-surface-dark rounded-2xl p-4 shadow-sm ring-1 ring-gray-100 dark:ring-white/5 overflow-hidden active:scale-[0.99] transition-transform duration-200">
+<div class="flex gap-4">
+<div class="shrink-0 relative">
+<div class="w-16 h-16 rounded-xl bg-gray-200 dark:bg-subtle-dark overflow-hidden ring-1 ring-black/5 dark:ring-white/10">
+<img alt="Portrait of a woman looking stressed and concerned" class="w-full h-full object-cover" data-alt="Concerned client portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkULBEQWvOiDrmnSoQlVE3hbQmJz2OXLwm-G_QIe99d4z1aIDrxP4TOt81SLqnt3krs8YMBaJYnP-ACeQnqjpXERqfdRjcrS9LDyj48O8_M4ZORI6U3eUH-kd94nA6ChV00se1DSrqe0QMCZ4x2L5xxzrwAk8O2TzxzlTBuJHA46MrZpKjAZIWN7hwGp2QqR7dC0K1whFXTc7YY9Rfoq-DS2_fUzUHm6ZubeHVfQLEYLX1dc8hC2DZBHZEWFpc_TCwqwAlq93pNpyg"/>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 text-[10px] font-bold px-2 py-0.5 rounded-full ring-2 ring-white dark:ring-surface-dark">
+                        MED
+                    </div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between mb-1">
+<span class="text-xs font-semibold text-primary uppercase tracking-wider">Conflict</span>
+<span class="text-gray-400 dark:text-gray-500 text-xs">10 min</span>
+</div>
+<h3 class="text-gray-900 dark:text-white font-bold text-lg leading-tight truncate mb-1">Missed Deadline</h3>
+<p class="text-gray-500 dark:text-gray-400 text-sm leading-snug line-clamp-2 mb-2">
+                        De-escalate a tense situation with a client after the team dropped the ball on a delivery.
+                    </p>
+<div class="flex items-center justify-between mt-3">
+<div class="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-[14px]">smart_toy</span>
+<span>Sarah (The Client)</span>
+</div>
+<button class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-black shadow-lg shadow-primary/20 hover:bg-primary-dark transition-colors">
+<span class="material-symbols-outlined text-[20px] ml-0.5">play_arrow</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 3: Feedback (Hard) -->
+<article class="group relative flex flex-col bg-surface-light dark:bg-surface-dark rounded-2xl p-4 shadow-sm ring-1 ring-gray-100 dark:ring-white/5 overflow-hidden active:scale-[0.99] transition-transform duration-200">
+<div class="flex gap-4">
+<div class="shrink-0 relative">
+<div class="w-16 h-16 rounded-xl bg-gray-200 dark:bg-subtle-dark overflow-hidden ring-1 ring-black/5 dark:ring-white/10">
+<img alt="Portrait of a young man with crossed arms looking defensive" class="w-full h-full object-cover" data-alt="Defensive employee portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkwwQeqzP_R_AJFKaOC9Oo7aEfH5no_YWVmcW29ntbOH7h2_7nbqSt7Qdyw7tQLM4ysxNXlFZU0g3ZcMcAXtbYe5JM0YgR715_WhQj4Qq9tUnqy_Z95Y78ZBEPQX9v1z3VMHwvXXMWpTPF_NYSNKrWXg7hC_U8V77zbGBfknFoDPHczGxabUwyEMEsuDiSZ175FGhehsiCX7N4rvVHE2EeAuQctfTsF3SqAjZZjfe30EUwzwiYNUKh4TTNJyONoLPhtCbplWRbuIJx"/>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-[10px] font-bold px-2 py-0.5 rounded-full ring-2 ring-white dark:ring-surface-dark">
+                        HARD
+                    </div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between mb-1">
+<span class="text-xs font-semibold text-primary uppercase tracking-wider">Feedback</span>
+<span class="text-gray-400 dark:text-gray-500 text-xs">20 min</span>
+</div>
+<h3 class="text-gray-900 dark:text-white font-bold text-lg leading-tight truncate mb-1">Underperformance</h3>
+<p class="text-gray-500 dark:text-gray-400 text-sm leading-snug line-clamp-2 mb-2">
+                        Give constructive feedback to a defensive high-potential employee who is slacking off.
+                    </p>
+<div class="flex items-center justify-between mt-3">
+<div class="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-[14px]">smart_toy</span>
+<span>Alex (The Defensive)</span>
+</div>
+<button class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-black shadow-lg shadow-primary/20 hover:bg-primary-dark transition-colors">
+<span class="material-symbols-outlined text-[20px] ml-0.5">play_arrow</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 4: Negotiation (Easy) -->
+<article class="group relative flex flex-col bg-surface-light dark:bg-surface-dark rounded-2xl p-4 shadow-sm ring-1 ring-gray-100 dark:ring-white/5 overflow-hidden active:scale-[0.99] transition-transform duration-200">
+<div class="flex gap-4">
+<div class="shrink-0 relative">
+<div class="w-16 h-16 rounded-xl bg-gray-200 dark:bg-subtle-dark overflow-hidden ring-1 ring-black/5 dark:ring-white/10">
+<img alt="Portrait of a creative professional woman smiling" class="w-full h-full object-cover" data-alt="Creative professional portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoXbXwh0V79ZLwmc1_1rkqsoqovGBrIxJgpqiY6r84JxmYrYQXe-iudjcpYyWFhgUXXo7N8QIYW9XGGhZ_TFhY8OwtN_H_2f9VesUOeXgqXAy9Ee57b3QhNxQW5iUGrDv7f7kJvBJbJBxcr8_t3wEomDAbZw3MEKZ3rHser9ud9OwzUmUpmp8GecIT31XSfqjJ00onCkFCse-Eyt_G9v0EreSgEd9rQeTIRCduNHF6t24nWNmmcZ1BEuEZHsrukpEI4U97b1XtmANm"/>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[10px] font-bold px-2 py-0.5 rounded-full ring-2 ring-white dark:ring-surface-dark">
+                        EASY
+                    </div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between mb-1">
+<span class="text-xs font-semibold text-primary uppercase tracking-wider">Negotiation</span>
+<span class="text-gray-400 dark:text-gray-500 text-xs">8 min</span>
+</div>
+<h3 class="text-gray-900 dark:text-white font-bold text-lg leading-tight truncate mb-1">Scope Creep</h3>
+<p class="text-gray-500 dark:text-gray-400 text-sm leading-snug line-clamp-2 mb-2">
+                        Gently say no to new features without hurting the relationship with an enthusiastic stakeholder.
+                    </p>
+<div class="flex items-center justify-between mt-3">
+<div class="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-[14px]">smart_toy</span>
+<span>Elena (The Enthusiast)</span>
+</div>
+<button class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-black shadow-lg shadow-primary/20 hover:bg-primary-dark transition-colors">
+<span class="material-symbols-outlined text-[20px] ml-0.5">play_arrow</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+</main>
+<!-- Bottom Navigation Bar (Optional Context) -->
+<nav class="fixed bottom-0 w-full bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-white/5 pb-safe-bottom">
+<div class="flex justify-around items-center py-3">
+<button class="flex flex-col items-center gap-1 text-gray-400 dark:text-gray-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-medium">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined fill-1">school</span>
+<span class="text-[10px] font-medium">Practice</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-gray-400 dark:text-gray-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">bar_chart</span>
+<span class="text-[10px] font-medium">Stats</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-gray-400 dark:text-gray-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</button>
+</div>
+</nav>
+</body></html>

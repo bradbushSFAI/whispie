@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Post-Chat Analysis - Whispie</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#38e07b",
+                        "primary-dark": "#2abf63",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#122017",
+                        "surface-dark": "#1a2c22",
+                        "surface-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom Radar Chart Styles */
+        .radar-poly {
+            fill: rgba(56, 224, 123, 0.2);
+            stroke: #38e07b;
+            stroke-width: 2;
+        }
+        .radar-grid {
+            fill: none;
+            stroke: #2a4032;
+            stroke-width: 1;
+        }
+        .radar-axis {
+            stroke: #2a4032;
+            stroke-width: 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen flex justify-center">
+<div class="w-full max-w-md bg-background-light dark:bg-background-dark min-h-screen relative flex flex-col pb-24 shadow-2xl">
+<!-- Header -->
+<div class="sticky top-0 z-50 bg-background-light dark:bg-background-dark/95 backdrop-blur-sm border-b border-gray-200 dark:border-white/10 p-4 pb-2 flex items-center justify-between">
+<button class="text-gray-900 dark:text-white flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h2 class="text-gray-900 dark:text-white text-lg font-bold leading-tight tracking-tight flex-1 text-center">Analysis</h2>
+<div class="flex w-10 items-center justify-end">
+<button class="text-primary font-bold text-base hover:text-primary-dark transition-colors">Done</button>
+</div>
+</div>
+<div class="overflow-y-auto flex-1 scrollbar-hide">
+<!-- Hero Section -->
+<div class="flex flex-col items-center px-6 pt-6 pb-2 text-center">
+<div class="mb-4 relative">
+<div class="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-emerald-600 flex items-center justify-center text-background-dark text-3xl font-bold shadow-lg shadow-primary/20">
+                        85
+                    </div>
+<div class="absolute -bottom-2 -right-2 bg-background-dark rounded-full p-1 border-4 border-background-dark">
+<span class="material-symbols-outlined text-primary text-xl">trending_up</span>
+</div>
+</div>
+<h2 class="text-gray-900 dark:text-white text-2xl font-bold leading-tight mb-2">Great job, Sarah!</h2>
+<p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed max-w-xs mx-auto">
+                    You handled the salary negotiation with poise. Here's a breakdown of your soft skills.
+                </p>
+</div>
+<!-- Radar Chart Section -->
+<div class="px-4 py-2 flex justify-center w-full">
+<div class="relative w-full max-w-[320px] aspect-square">
+<svg class="w-full h-full drop-shadow-xl" viewbox="0 0 200 200">
+<!-- Grid Circles -->
+<circle class="radar-grid opacity-30" cx="100" cy="100" r="20"></circle>
+<circle class="radar-grid opacity-50" cx="100" cy="100" r="40"></circle>
+<circle class="radar-grid opacity-70" cx="100" cy="100" r="60"></circle>
+<circle class="radar-grid" cx="100" cy="100" r="80"></circle>
+<!-- Axis Lines -->
+<line class="radar-axis" x1="100" x2="100" y1="100" y2="20"></line> <!-- Top -->
+<line class="radar-axis" x1="100" x2="180" y1="100" y2="100"></line> <!-- Right -->
+<line class="radar-axis" x1="100" x2="100" y1="100" y2="180"></line> <!-- Bottom -->
+<line class="radar-axis" x1="100" x2="20" y1="100" y2="100"></line> <!-- Left -->
+<!-- Data Polygon: Points calculated roughly for visual scores -->
+<!-- Top (Empathy): High ~90% (y=28) -->
+<!-- Right (Assertiveness): Mid ~65% (x=152) -->
+<!-- Bottom (Clarity): High ~85% (y=168) -->
+<!-- Left (Professionalism): High ~95% (x=24) -->
+<polygon class="radar-poly" points="100,28 152,100 100,168 24,100"></polygon>
+<!-- Labels -->
+<text class="fill-gray-600 dark:fill-gray-300 text-[10px] font-bold uppercase tracking-wider" text-anchor="middle" x="100" y="15">Empathy</text>
+<text class="fill-gray-600 dark:fill-gray-300 text-[10px] font-bold uppercase tracking-wider" text-anchor="middle" x="190" y="104">Assertiveness</text>
+<text class="fill-gray-600 dark:fill-gray-300 text-[10px] font-bold uppercase tracking-wider" text-anchor="middle" x="100" y="195">Clarity</text>
+<text class="fill-gray-600 dark:fill-gray-300 text-[10px] font-bold uppercase tracking-wider" text-anchor="middle" x="10" y="104">Professionalism</text>
+<!-- Data Points -->
+<circle class="fill-primary" cx="100" cy="28" r="3"></circle>
+<circle class="fill-primary" cx="152" cy="100" r="3"></circle>
+<circle class="fill-primary" cx="100" cy="168" r="3"></circle>
+<circle class="fill-primary" cx="24" cy="100" r="3"></circle>
+</svg>
+</div>
+</div>
+<!-- AI Insight Section -->
+<div class="px-4 py-4">
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl p-5 border border-gray-200 dark:border-white/5 shadow-sm">
+<div class="flex items-center gap-3 mb-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/30">
+<img alt="Persona portrait of a stern businessman" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDV9GKbeQc5-VQ5QHJR4kYzqtejeOEpaWjeSwUbg0fRY4-XLD1FxENB91c4gv2EWWyW7Aqn8mlVaYyU09jtjiT9U1fNXg8CbWHVGCKyUAACZu_aJqK0Zk_VS0u7o0lvFXNd80tZcF_QiQtVKzjTGJI_oPpZ2Q36lAOlncvNjdBMmUY2G0dTWyMIwAkksU-UChHNtNPOskfWA58OOinqKSa3TCSIG55tEED6YJyVgZT-mP2hoiTeDUy5V-kpgBNRN3CbDh98RQ0WOokY"/>
+</div>
+<div>
+<h3 class="text-sm font-bold text-gray-900 dark:text-white">What your boss was thinking</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">AI Psychological Insight</p>
+</div>
+</div>
+<div class="relative pl-4 border-l-2 border-primary/40">
+<p class="text-sm text-gray-700 dark:text-gray-300 italic leading-relaxed">
+                            "Sarah is clearly prepared, which I respect. However, when I pushed back on the budget, she hesitated. I'm wondering if she's truly confident in the value she's proposing, or just reciting a script."
+                        </p>
+</div>
+</div>
+</div>
+<!-- Key Moments -->
+<div class="px-4 py-2">
+<h3 class="text-gray-900 dark:text-white text-lg font-bold mb-4 px-1">Key Moments</h3>
+<div class="space-y-4">
+<!-- Positive Moment -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl p-4 border-l-4 border-primary shadow-sm">
+<div class="flex items-start gap-3">
+<div class="mt-1 p-1.5 bg-primary/10 rounded-full text-primary shrink-0">
+<span class="material-symbols-outlined text-lg">check_circle</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-gray-900 dark:text-white mb-1">Excellent Opening</h4>
+<p class="text-xs text-gray-500 dark:text-gray-400 mb-2">00:15 - "I appreciate you taking the time..."</p>
+<p class="text-sm text-gray-700 dark:text-gray-300 leading-snug">
+                                    You set a positive tone immediately. Acknowledging time constraints builds rapport effectively.
+                                </p>
+</div>
+</div>
+</div>
+<!-- Improvement Moment -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl p-4 border-l-4 border-orange-400 shadow-sm">
+<div class="flex items-start gap-3">
+<div class="mt-1 p-1.5 bg-orange-400/10 rounded-full text-orange-400 shrink-0">
+<span class="material-symbols-outlined text-lg">lightbulb</span>
+</div>
+<div class="w-full">
+<h4 class="text-sm font-bold text-gray-900 dark:text-white mb-1">Missed Opportunity</h4>
+<p class="text-xs text-gray-500 dark:text-gray-400 mb-2">02:45 - Handling the budget objection</p>
+<div class="bg-background-light dark:bg-background-dark rounded-lg p-3 mb-2">
+<p class="text-xs font-semibold text-gray-500 dark:text-gray-500 mb-1 uppercase tracking-wide">You said</p>
+<p class="text-sm text-gray-700 dark:text-gray-300">"Oh, I understand the budget is tight right now..."</p>
+</div>
+<div class="bg-primary/5 rounded-lg p-3">
+<p class="text-xs font-semibold text-primary mb-1 uppercase tracking-wide">Try this instead</p>
+<p class="text-sm text-gray-700 dark:text-gray-200">"While I understand the constraints, the ROI on this project specifically addresses that gap..."</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Another Positive Moment for balance -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl p-4 border-l-4 border-primary shadow-sm">
+<div class="flex items-start gap-3">
+<div class="mt-1 p-1.5 bg-primary/10 rounded-full text-primary shrink-0">
+<span class="material-symbols-outlined text-lg">check_circle</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-gray-900 dark:text-white mb-1">Strong Closing</h4>
+<p class="text-xs text-gray-500 dark:text-gray-400 mb-2">04:10 - summarizing next steps</p>
+<p class="text-sm text-gray-700 dark:text-gray-300 leading-snug">
+                                    Summarizing the action items ensured clarity and showed professionalism.
+                                </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Spacing for bottom fixed area -->
+<div class="h-8"></div>
+</div>
+<!-- Fixed Bottom Action Area -->
+<div class="absolute bottom-0 left-0 w-full bg-background-light dark:bg-background-dark/95 backdrop-blur-md border-t border-gray-200 dark:border-white/10 p-4 pb-8 flex gap-3">
+<button class="flex-1 flex items-center justify-center gap-2 bg-surface-light dark:bg-white/10 hover:bg-gray-100 dark:hover:bg-white/20 text-gray-900 dark:text-white font-bold py-3.5 px-4 rounded-xl transition-all border border-gray-200 dark:border-transparent">
+<span class="material-symbols-outlined text-xl">book</span>
+<span>Save to Journal</span>
+</button>
+<button class="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-background-dark font-bold py-3.5 px-4 rounded-xl transition-all shadow-lg shadow-primary/25">
+<span class="material-symbols-outlined text-xl">refresh</span>
+<span>Try Again</span>
+</button>
+</div>
+</div>
+</body></html>
