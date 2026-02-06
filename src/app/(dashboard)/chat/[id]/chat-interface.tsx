@@ -342,7 +342,7 @@ export function ChatInterface({
             </button>
           </div>
 
-          <p className="text-center mt-3 text-[10px] text-slate-400 dark:text-white/20">
+          <p className="text-center mt-3 text-[10px] text-slate-400 dark:text-white/50">
             Whispie AI can make mistakes. This is practice, not real advice.
           </p>
         </div>
