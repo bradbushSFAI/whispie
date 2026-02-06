@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { levelProgress, xpForLevel, levelTitle } from '@/lib/gamification'
 import { isStreakAtRisk } from '@/lib/gamification/streaks'
+import { ConversationList } from '@/components/dashboard/conversation-list'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -173,72 +174,12 @@ export default async function DashboardPage() {
         <div>
           <h3 className="text-lg font-bold text-white mb-4">Recent Sessions</h3>
 
-          {conversations && conversations.length > 0 ? (
-            <div className="space-y-3">
-              {conversations.map((conv) => {
-                const score = conv.analysis?.[0]?.overall_score
-                const scenario = conv.scenario as { title: string; category: string } | null
-                const persona = conv.persona as { name: string; title: string } | null
-
-                return (
-                  <Link
-                    key={conv.id}
-                    href={conv.status === 'completed' ? `/analysis/${conv.id}` : `/chat/${conv.id}`}
-                    className="block"
-                  >
-                    <div className="bg-surface-dark rounded-xl p-4 border border-white/5 hover:border-whispie-primary/50 transition-colors">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-semibold text-whispie-primary uppercase tracking-wider">
-                          {scenario?.category || 'Practice'}
-                        </span>
-                        <span className="text-xs text-slate-500">
-                          {new Date(conv.created_at).toLocaleDateString()}
-                        </span>
-                      </div>
-                      <h4 className="text-white font-bold mb-1">
-                        {scenario?.title || 'Conversation'}
-                      </h4>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-slate-400">
-                          with {persona?.name || 'AI'}
-                        </span>
-                        <div className="flex items-center gap-2">
-                          {conv.status === 'active' ? (
-                            <span className="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded-full">
-                              In Progress
-                            </span>
-                          ) : score ? (
-                            <span className={`text-sm font-bold ${
-                              score >= 80 ? 'text-whispie-primary' :
-                              score >= 60 ? 'text-yellow-400' : 'text-orange-400'
-                            }`}>
-                              {score}
-                            </span>
-                          ) : (
-                            <span className="text-xs bg-slate-500/20 text-slate-400 px-2 py-0.5 rounded-full">
-                              Completed
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                )
-              })}
-            </div>
-          ) : (
-            <div className="bg-surface-dark rounded-xl p-8 text-center border border-white/5">
-              <p className="text-slate-400 mb-4">
-                No conversations yet. Start your first scenario!
-              </p>
-              <Link
-                href="/scenarios"
-                className="inline-block bg-whispie-primary text-background-dark font-bold px-6 py-2 rounded-xl"
-              >
-                Browse Scenarios
-              </Link>
-            </div>
-          )}
+          <ConversationList conversations={conversations?.map((conv) => ({
+            ...conv,
+            scenario: conv.scenario as { title: string; category: string } | null,
+            persona: conv.persona as { name: string; title: string } | null,
+            analysis: conv.analysis as { overall_score: number }[] | null,
+          })) || []} />
         </div>
       </main>
     </div>
