@@ -86,7 +86,9 @@ export async function POST(
         const chat = model.startChat({
           generationConfig,
           history: chatHistory,
-          systemInstruction: systemPrompt,
+          systemInstruction: {
+            parts: [{ text: systemPrompt }],
+          },
         })
 
         // If first turn with no user message, prompt the AI to start
