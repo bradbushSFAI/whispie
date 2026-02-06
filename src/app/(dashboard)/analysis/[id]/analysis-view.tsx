@@ -46,7 +46,7 @@ function ScoreCircle({ score }: { score: number }) {
 }
 
 function RadarChart({ scores }: { scores: { label: string; score: number }[] }) {
-  const cx = 120
+  const cx = 170
   const cy = 120
   const maxR = 80
 
@@ -78,14 +78,14 @@ function RadarChart({ scores }: { scores: { label: string; score: number }[] }) 
   // Label positions offset further from the axis endpoints
   const labelOffsets = [
     { x: cx, y: cy - maxR - 22, anchor: 'middle' as const },       // top
-    { x: cx + maxR + 8, y: cy, anchor: 'start' as const },         // right
+    { x: cx + maxR + 10, y: cy, anchor: 'start' as const },        // right
     { x: cx, y: cy + maxR + 24, anchor: 'middle' as const },       // bottom
-    { x: cx - maxR - 8, y: cy, anchor: 'end' as const },           // left
+    { x: cx - maxR - 10, y: cy, anchor: 'end' as const },          // left
   ]
 
   return (
     <div className="flex flex-col items-center">
-      <svg viewBox="0 0 240 240" className="w-full max-w-[280px]">
+      <svg viewBox="0 0 340 240" className="w-full max-w-[340px]">
         {/* Grid diamonds */}
         {gridPolygons.map((points, i) => (
           <polygon
