@@ -150,31 +150,37 @@ export default async function ProgressPage() {
         </div>
 
         {/* Recent Scores */}
-        {recentAnalyses && recentAnalyses.length > 0 && (
-          <div className="mb-8">
-            <h3 className="text-lg font-bold text-white mb-4">Recent Scores</h3>
-            <div className="bg-surface-dark rounded-2xl p-4 border border-white/5">
-              <div className="flex items-end justify-between h-24 gap-2">
-                {recentAnalyses.reverse().map((conv, i) => {
-                  const score = conv.analysis?.[0]?.overall_score || 0
-                  return (
-                    <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                      <div
-                        className={`w-full rounded-t transition-all ${
-                          score >= 80 ? 'bg-whispie-primary' :
-                          score >= 60 ? 'bg-yellow-500' : 'bg-orange-500'
-                        }`}
-                        style={{ height: `${score}%` }}
-                      />
-                      <span className="text-[10px] text-slate-400">{score}</span>
-                    </div>
-                  )
-                })}
-              </div>
-              <p className="text-xs text-slate-400 text-center mt-3">Last {recentAnalyses.length} conversations</p>
-            </div>
+        <div className="mb-8">
+          <h3 className="text-lg font-bold text-white mb-4">Recent Scores</h3>
+          <div className="bg-surface-dark rounded-2xl p-4 border border-white/5">
+            {recentAnalyses && recentAnalyses.filter(c => c.analysis?.[0]?.overall_score).length > 0 ? (
+              <>
+                <div className="flex items-end justify-between h-24 gap-2">
+                  {[...recentAnalyses].reverse().map((conv, i) => {
+                    const score = conv.analysis?.[0]?.overall_score || 0
+                    return (
+                      <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                        <div
+                          className={`w-full rounded-t transition-all ${
+                            score >= 80 ? 'bg-whispie-primary' :
+                            score >= 60 ? 'bg-yellow-500' : 'bg-orange-500'
+                          }`}
+                          style={{ height: `${Math.max(score, 5)}%` }}
+                        />
+                        <span className="text-[10px] text-slate-300">{score || '-'}</span>
+                      </div>
+                    )
+                  })}
+                </div>
+                <p className="text-xs text-slate-300 text-center mt-3">Last {recentAnalyses.length} conversations</p>
+              </>
+            ) : (
+              <p className="text-sm text-slate-300 text-center py-4">
+                Complete a conversation to see your scores here.
+              </p>
+            )}
           </div>
-        )}
+        </div>
 
         {/* Achievements */}
         <div>
