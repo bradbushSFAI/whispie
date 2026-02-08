@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 import type { Message, Conversation, Scenario, Persona } from '@/types/database'
 
 type ConversationWithDetails = Conversation & {
@@ -179,6 +180,94 @@ export function ChatInterface({
     }
   }
 
+  async function redoLastMessage(userMessageIndex: number) {
+    if (isLoading) return
+
+    const userMessage = messages[userMessageIndex]
+    if (!userMessage || userMessage.role !== 'user') return
+
+    // Find the assistant message that follows this user message
+    const assistantMessageIndex = userMessageIndex + 1
+    const assistantMessage = messages[assistantMessageIndex]
+
+    if (!assistantMessage || assistantMessage.role !== 'assistant') return
+
+    setIsLoading(true)
+    setStreamingContent('')
+
+    try {
+      // Delete the assistant message from the database
+      const supabase = createClient()
+      await supabase
+        .from('messages')
+        .delete()
+        .eq('id', assistantMessage.id)
+
+      // Delete the assistant message from state
+      setMessages((prev) => prev.filter((_, i) => i !== assistantMessageIndex))
+
+      // Call API with redo flag to regenerate response
+      const response = await fetch(
+        `/api/conversations/${conversation.id}/messages`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: userMessage.content, redo: true }),
+        }
+      )
+
+      if (!response.ok) throw new Error('Failed to regenerate response')
+
+      const reader = response.body?.getReader()
+      if (!reader) throw new Error('No reader available')
+
+      let fullContent = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        const text = new TextDecoder().decode(value)
+        const lines = text.split('\n\n')
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6))
+              if (data.error) {
+                console.error('Server error:', data.error)
+                setStreamingContent(`Error: ${data.error}`)
+              }
+              if (data.text) {
+                fullContent += data.text
+                setStreamingContent(fullContent)
+              }
+              if (data.done) {
+                setMessages((prev) => [
+                  ...prev,
+                  {
+                    id: crypto.randomUUID(),
+                    conversation_id: conversation.id,
+                    role: 'assistant',
+                    content: fullContent,
+                    created_at: new Date().toISOString(),
+                  },
+                ])
+                setStreamingContent('')
+              }
+            } catch {
+              // Ignore parse errors for incomplete chunks
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error redoing message:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
@@ -248,49 +337,69 @@ export function ChatInterface({
         </div>
 
         {/* Messages */}
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`flex gap-3 max-w-[90%] ${
-              message.role === 'user' ? 'ml-auto justify-end' : ''
-            }`}
-          >
-            {message.role === 'assistant' && (
-              <div className="shrink-0 flex flex-col justify-end">
-                <div className="size-8 rounded-full bg-subtle-dark flex items-center justify-center text-sm opacity-80 overflow-hidden">
-                  {persona.avatar_url ? (
-                    <img src={persona.avatar_url} alt="" className="w-full h-full object-cover" />
-                  ) : (
-                    persona.name.charAt(0)
-                  )}
-                </div>
-              </div>
-            )}
+        {messages.map((message, index) => {
+          // Check if this is the last user message with a response after it
+          const isLastUserMessage = message.role === 'user' &&
+            index === messages.length - 2 &&
+            messages[index + 1]?.role === 'assistant'
+
+          return (
             <div
-              className={`flex flex-col gap-1 ${
-                message.role === 'user' ? 'items-end' : 'items-start'
+              key={message.id}
+              className={`flex gap-3 max-w-[90%] ${
+                message.role === 'user' ? 'ml-auto justify-end' : ''
               }`}
             >
+              {message.role === 'assistant' && (
+                <div className="shrink-0 flex flex-col justify-end">
+                  <div className="size-8 rounded-full bg-subtle-dark flex items-center justify-center text-sm opacity-80 overflow-hidden">
+                    {persona.avatar_url ? (
+                      <img src={persona.avatar_url} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      persona.name.charAt(0)
+                    )}
+                  </div>
+                </div>
+              )}
               <div
-                className={`p-4 shadow-sm ${
-                  message.role === 'user'
-                    ? 'bg-whispie-primary rounded-2xl rounded-br-none text-background-dark'
-                    : 'bg-white dark:bg-surface-dark rounded-2xl rounded-bl-none border border-slate-100 dark:border-white/5'
+                className={`flex flex-col gap-1 ${
+                  message.role === 'user' ? 'items-end' : 'items-start'
                 }`}
               >
-                <p
-                  className={`text-base leading-relaxed ${
+                <div
+                  className={`p-4 shadow-sm ${
                     message.role === 'user'
-                      ? 'font-medium'
-                      : 'text-slate-700 dark:text-slate-200'
+                      ? 'bg-whispie-primary rounded-2xl rounded-br-none text-background-dark'
+                      : 'bg-white dark:bg-surface-dark rounded-2xl rounded-bl-none border border-slate-100 dark:border-white/5'
                   }`}
                 >
-                  {message.content}
-                </p>
+                  <p
+                    className={`text-base leading-relaxed ${
+                      message.role === 'user'
+                        ? 'font-medium'
+                        : 'text-slate-700 dark:text-slate-200'
+                    }`}
+                  >
+                    {message.content}
+                  </p>
+                </div>
+                {/* Redo button for last user message */}
+                {isLastUserMessage && !isLoading && (
+                  <button
+                    onClick={() => redoLastMessage(index)}
+                    className="flex items-center gap-1 px-2 py-1 rounded-full text-xs text-slate-500 dark:text-slate-400 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                    title="Regenerate response"
+                  >
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    <span>Redo</span>
+                  </button>
+                )}
               </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
 
         {/* Streaming message */}
         {streamingContent && (

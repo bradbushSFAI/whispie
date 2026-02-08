@@ -32,9 +32,10 @@ export async function POST(
     return new Response('Conversation not found', { status: 404 })
   }
 
-  // Parse user message
+  // Parse user message and redo flag
   const body = await request.json()
   const userMessage = body.message
+  const isRedo = body.redo === true
 
   if (!userMessage && conversation.total_turns > 0) {
     return new Response('Message is required', { status: 400 })
@@ -58,8 +59,8 @@ export async function POST(
   const isFirstTurn = !existingMessages || existingMessages.length === 0
   console.log('[messages] isFirstTurn:', isFirstTurn, 'existingMessages:', existingMessages?.length, 'total_turns:', conversation.total_turns)
 
-  // Save user message if provided
-  if (userMessage) {
+  // Save user message if provided (skip if redo)
+  if (userMessage && !isRedo) {
     await supabase.from('messages').insert({
       conversation_id: conversationId,
       role: 'user',
