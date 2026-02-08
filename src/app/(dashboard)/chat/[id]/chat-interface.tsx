@@ -192,79 +192,27 @@ export function ChatInterface({
 
     if (!assistantMessage || assistantMessage.role !== 'assistant') return
 
-    setIsLoading(true)
-    setStreamingContent('')
-
     try {
-      // Delete the assistant message from the database
       const supabase = createClient()
+
+      // Delete both the user message and assistant message from the database
       await supabase
         .from('messages')
         .delete()
-        .eq('id', assistantMessage.id)
+        .in('id', [userMessage.id, assistantMessage.id])
 
-      // Delete the assistant message from state
-      setMessages((prev) => prev.filter((_, i) => i !== assistantMessageIndex))
+      // Delete both messages from state
+      setMessages((prev) => prev.filter((_, i) => i !== userMessageIndex && i !== assistantMessageIndex))
 
-      // Call API with redo flag to regenerate response
-      const response = await fetch(
-        `/api/conversations/${conversation.id}/messages`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: userMessage.content, redo: true }),
-        }
-      )
+      // Put the user message text back into the input field for editing
+      setInput(userMessage.content)
 
-      if (!response.ok) throw new Error('Failed to regenerate response')
-
-      const reader = response.body?.getReader()
-      if (!reader) throw new Error('No reader available')
-
-      let fullContent = ''
-
-      while (true) {
-        const { done, value } = await reader.read()
-        if (done) break
-
-        const text = new TextDecoder().decode(value)
-        const lines = text.split('\n\n')
-
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            try {
-              const data = JSON.parse(line.slice(6))
-              if (data.error) {
-                console.error('Server error:', data.error)
-                setStreamingContent(`Error: ${data.error}`)
-              }
-              if (data.text) {
-                fullContent += data.text
-                setStreamingContent(fullContent)
-              }
-              if (data.done) {
-                setMessages((prev) => [
-                  ...prev,
-                  {
-                    id: crypto.randomUUID(),
-                    conversation_id: conversation.id,
-                    role: 'assistant',
-                    content: fullContent,
-                    created_at: new Date().toISOString(),
-                  },
-                ])
-                setStreamingContent('')
-              }
-            } catch {
-              // Ignore parse errors for incomplete chunks
-            }
-          }
-        }
-      }
+      // Focus the textarea
+      setTimeout(() => {
+        textareaRef.current?.focus()
+      }, 0)
     } catch (error) {
-      console.error('Error redoing message:', error)
-    } finally {
-      setIsLoading(false)
+      console.error('Error preparing redo:', error)
     }
   }
 
