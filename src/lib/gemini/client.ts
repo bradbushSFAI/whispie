@@ -13,7 +13,7 @@ export const model = genAI.getGenerativeModel({
 
 // Gemini 2.5 Pro - used for analysis with thinking enabled
 export const analysisModel = genAI.getGenerativeModel({
-  model: 'gemini-2.5-pro-preview-06-05',
+  model: 'gemini-2.5-pro',
 })
 
 export const generationConfig = {
