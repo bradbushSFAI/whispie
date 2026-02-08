@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Analysis, Conversation, Scenario, Persona } from '@/types/database'
 
@@ -177,6 +177,7 @@ export function AnalysisView({
   const [analysis, setAnalysis] = useState<Analysis | null>(initialAnalysis)
   const [isLoading, setIsLoading] = useState(!initialAnalysis)
   const [error, setError] = useState<string | null>(null)
+  const analysisContentRef = useRef<HTMLDivElement>(null)
 
   const generateAnalysis = useCallback(async () => {
     setIsLoading(true)
@@ -207,6 +208,16 @@ export function AnalysisView({
       generateAnalysis()
     }
   }, [initialAnalysis, generateAnalysis])
+
+  // Auto-scroll to analysis content when it becomes available
+  useEffect(() => {
+    if (analysis && analysisContentRef.current) {
+      // Small delay to ensure content is rendered
+      setTimeout(() => {
+        analysisContentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 100)
+    }
+  }, [analysis])
 
   const { scenario, persona } = conversation
 
@@ -269,7 +280,7 @@ export function AnalysisView({
 
       <div className="pb-32">
         {/* Hero Section */}
-        <div className="flex flex-col items-center px-6 pt-6 pb-4 text-center">
+        <div ref={analysisContentRef} className="flex flex-col items-center px-6 pt-6 pb-4 text-center">
           <div className="mb-4 relative">
             <ScoreCircle score={analysis.overall_score || 0} />
             <div className="absolute -bottom-2 -right-2 bg-background-dark rounded-full p-1 border-4 border-background-dark">
