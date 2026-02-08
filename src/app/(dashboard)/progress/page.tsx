@@ -44,6 +44,7 @@ export default async function ProgressPage() {
     .select('created_at, analysis:analyses(overall_score)')
     .eq('user_id', user.id)
     .eq('status', 'completed')
+    .not('analysis', 'is', null)
     .order('created_at', { ascending: false })
     .limit(10)
 
@@ -70,6 +71,18 @@ export default async function ProgressPage() {
     skill: 'Skills',
     special: 'Special',
   }
+
+  // Generate all levels (up to 50)
+  const allLevels = Array.from({ length: 50 }, (_, i) => {
+    const lvl = i + 1
+    return {
+      level: lvl,
+      xpRequired: xpForLevel(lvl),
+      title: levelTitle(lvl),
+      isUnlocked: lvl <= level,
+      isCurrent: lvl === level,
+    }
+  })
 
   return (
     <div className="min-h-screen bg-background-dark">
@@ -117,6 +130,89 @@ export default async function ProgressPage() {
           </div>
         </div>
 
+        {/* All Levels */}
+        <div className="mb-8">
+          <h3 className="text-lg font-bold text-white mb-4">All Levels</h3>
+          <div className="bg-surface-dark rounded-2xl p-4 border border-white/5">
+            <div className="space-y-3">
+              {allLevels.map((lvl) => (
+                <div
+                  key={lvl.level}
+                  className={`relative rounded-lg p-3 transition-all ${
+                    lvl.isCurrent
+                      ? 'bg-whispie-primary/20 border-2 border-whispie-primary ring-2 ring-whispie-primary/50'
+                      : lvl.isUnlocked
+                      ? 'bg-white/5 border border-whispie-primary/20'
+                      : 'bg-white/5 border border-white/5 opacity-50'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    {/* Level Badge */}
+                    <div
+                      className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg ${
+                        lvl.isCurrent
+                          ? 'bg-whispie-primary text-background-dark'
+                          : lvl.isUnlocked
+                          ? 'bg-whispie-primary/50 text-white'
+                          : 'bg-white/10 text-slate-400'
+                      }`}
+                    >
+                      {lvl.isUnlocked ? lvl.level : '🔒'}
+                    </div>
+
+                    {/* Level Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <p
+                          className={`font-bold text-sm ${
+                            lvl.isCurrent
+                              ? 'text-whispie-primary'
+                              : lvl.isUnlocked
+                              ? 'text-white'
+                              : 'text-slate-400'
+                          }`}
+                        >
+                          Level {lvl.level}
+                          {lvl.isCurrent && <span className="ml-2 text-xs">(Current)</span>}
+                        </p>
+                        <p
+                          className={`text-xs ${
+                            lvl.isUnlocked ? 'text-slate-300' : 'text-slate-500'
+                          }`}
+                        >
+                          {lvl.xpRequired.toLocaleString()} XP
+                        </p>
+                      </div>
+                      <p
+                        className={`text-xs ${
+                          lvl.isUnlocked ? 'text-slate-300' : 'text-slate-500'
+                        }`}
+                      >
+                        {lvl.title}
+                      </p>
+
+                      {/* Progress bar for current level */}
+                      {lvl.isCurrent && (
+                        <div className="mt-2">
+                          <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-whispie-primary rounded-full transition-all"
+                              style={{ width: `${progress}%` }}
+                            />
+                          </div>
+                          <p className="text-xs text-slate-300 mt-1">
+                            {nextLevelXp - xp} XP to next level
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-4 mb-8">
           {/* Streak */}
@@ -153,11 +249,11 @@ export default async function ProgressPage() {
         <div className="mb-8">
           <h3 className="text-lg font-bold text-white mb-4">Recent Scores</h3>
           <div className="bg-surface-dark rounded-2xl p-4 border border-white/5">
-            {recentAnalyses && recentAnalyses.filter(c => c.analysis?.[0]?.overall_score).length > 0 ? (
+            {recentAnalyses && recentAnalyses.filter(c => (c.analysis as any)?.overall_score).length > 0 ? (
               <>
                 <div className="flex items-end justify-between h-24 gap-2">
                   {[...recentAnalyses].reverse().map((conv, i) => {
-                    const score = conv.analysis?.[0]?.overall_score || 0
+                    const score = (conv.analysis as any)?.overall_score || 0
                     return (
                       <div key={i} className="flex-1 flex flex-col items-center gap-1">
                         <div

@@ -75,7 +75,10 @@ export default async function DashboardPage() {
 
       <main className="max-w-2xl mx-auto px-4 py-6 pb-24">
         {/* Level & XP Card */}
-        <div className="bg-surface-dark rounded-2xl p-5 border border-white/5 mb-6">
+        <Link
+          href="/progress"
+          className="block bg-surface-dark rounded-2xl p-5 border border-white/5 mb-6 hover:border-whispie-primary/50 transition-colors cursor-pointer"
+        >
           <div className="flex items-center justify-between mb-3">
             <div>
               <p className="text-xs text-slate-300 uppercase tracking-wider">Level {level}</p>
@@ -95,7 +98,7 @@ export default async function DashboardPage() {
           <p className="text-xs text-slate-400 mt-2">
             {nextLevelXp - xp} XP to level {level + 1}
           </p>
-        </div>
+        </Link>
 
         {/* Quick Actions */}
         <div className="grid grid-cols-2 gap-4 mb-6">
