@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 type DimensionKey = 'clarity' | 'empathy' | 'assertiveness' | 'professionalism'
 
@@ -25,18 +25,31 @@ const dimensionInfo: Record<DimensionKey, { description: string; tips: string }>
 
 export function DimensionTooltip({ dimension }: { dimension: DimensionKey }) {
   const [isOpen, setIsOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
   const info = dimensionInfo[dimension]
 
+  useEffect(() => {
+    if (!isOpen) return
+    function handleClickOutside(e: MouseEvent | TouchEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setIsOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('touchstart', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('touchstart', handleClickOutside)
+    }
+  }, [isOpen])
+
   return (
-    <div className="relative inline-block">
+    <div className="relative inline-block" ref={ref}>
       <button
         className="inline-flex items-center justify-center w-4 h-4 ml-1 text-slate-400 dark:text-slate-500 hover:text-whispie-primary dark:hover:text-whispie-primary transition-colors"
-        onMouseEnter={() => setIsOpen(true)}
-        onMouseLeave={() => setIsOpen(false)}
-        onTouchStart={() => setIsOpen(true)}
-        onTouchEnd={() => setTimeout(() => setIsOpen(false), 2000)}
         onClick={(e) => {
           e.preventDefault()
+          e.stopPropagation()
           setIsOpen(!isOpen)
         }}
         aria-label={`Info about ${dimension}`}
