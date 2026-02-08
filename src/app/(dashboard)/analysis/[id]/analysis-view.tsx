@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { DimensionTooltip } from '@/components/analysis/dimension-tooltip'
 import type { Analysis, Conversation, Scenario, Persona } from '@/types/database'
 
 type ConversationWithDetails = Conversation & {
@@ -45,7 +46,7 @@ function ScoreCircle({ score }: { score: number }) {
   )
 }
 
-function RadarChart({ scores }: { scores: { label: string; score: number }[] }) {
+function RadarChart({ scores }: { scores: { label: string; score: number; key: string }[] }) {
   const cx = 170
   const cy = 120
   const maxR = 80
@@ -84,7 +85,7 @@ function RadarChart({ scores }: { scores: { label: string; score: number }[] }) 
   ]
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center relative">
       <svg viewBox="0 0 340 240" className="w-full max-w-[340px]">
         {/* Grid diamonds */}
         {gridPolygons.map((points, i) => (
@@ -160,6 +161,35 @@ function RadarChart({ scores }: { scores: { label: string; score: number }[] }) 
           )
         })}
       </svg>
+
+      {/* Info icons overlay - positioned absolutely over SVG labels */}
+      <div className="absolute inset-0 pointer-events-none">
+        {scores.map((s, i) => {
+          const pos = labelOffsets[i]
+          // Convert SVG coordinates to percentage positions
+          const percentX = (pos.x / 340) * 100
+          const percentY = ((pos.y - 6) / 240) * 100
+
+          return (
+            <div
+              key={i}
+              className="absolute pointer-events-auto"
+              style={{
+                left: `${percentX}%`,
+                top: `${percentY}%`,
+                transform: pos.anchor === 'middle' ? 'translate(-50%, -50%)' :
+                           pos.anchor === 'start' ? 'translate(0, -50%)' :
+                           'translate(-100%, -50%)',
+              }}
+            >
+              <div className={`inline-flex items-center ${pos.anchor === 'end' ? 'flex-row-reverse' : ''}`}>
+                <span className="invisible text-[11px] font-medium">{s.label}</span>
+                <DimensionTooltip dimension={s.key as any} />
+              </div>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -303,10 +333,10 @@ export function AnalysisView({
           <div className="bg-surface-dark rounded-xl p-4 border border-white/5">
             <RadarChart
               scores={[
-                { label: 'Clarity', score: analysis.clarity_score || 0 },
-                { label: 'Empathy', score: analysis.empathy_score || 0 },
-                { label: 'Assertiveness', score: analysis.assertiveness_score || 0 },
-                { label: 'Professionalism', score: analysis.professionalism_score || 0 },
+                { label: 'Clarity', score: analysis.clarity_score || 0, key: 'clarity' },
+                { label: 'Empathy', score: analysis.empathy_score || 0, key: 'empathy' },
+                { label: 'Assertiveness', score: analysis.assertiveness_score || 0, key: 'assertiveness' },
+                { label: 'Professionalism', score: analysis.professionalism_score || 0, key: 'professionalism' },
               ]}
             />
           </div>
