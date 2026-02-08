@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 
 type DimensionKey = 'clarity' | 'empathy' | 'assertiveness' | 'professionalism'
 
@@ -26,8 +26,10 @@ const dimensionInfo: Record<DimensionKey, { description: string; tips: string }>
 export function DimensionTooltip({ dimension }: { dimension: DimensionKey }) {
   const [isOpen, setIsOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
+  const tooltipRef = useRef<HTMLDivElement>(null)
   const info = dimensionInfo[dimension]
 
+  // Close on click outside
   useEffect(() => {
     if (!isOpen) return
     function handleClickOutside(e: MouseEvent | TouchEvent) {
@@ -42,6 +44,33 @@ export function DimensionTooltip({ dimension }: { dimension: DimensionKey }) {
       document.removeEventListener('touchstart', handleClickOutside)
     }
   }, [isOpen])
+
+  // Clamp tooltip to viewport edges
+  const clampTooltip = useCallback(() => {
+    if (!tooltipRef.current) return
+    const el = tooltipRef.current
+    const rect = el.getBoundingClientRect()
+    const pad = 12
+
+    // Reset any previous adjustment
+    el.style.left = '50%'
+    el.style.transform = 'translateX(-50%)'
+
+    const newRect = el.getBoundingClientRect()
+    if (newRect.left < pad) {
+      const shift = pad - newRect.left
+      el.style.left = `calc(50% + ${shift}px)`
+    } else if (newRect.right > window.innerWidth - pad) {
+      const shift = newRect.right - (window.innerWidth - pad)
+      el.style.left = `calc(50% - ${shift}px)`
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isOpen) {
+      requestAnimationFrame(clampTooltip)
+    }
+  }, [isOpen, clampTooltip])
 
   return (
     <div className="relative inline-block" ref={ref}>
@@ -59,9 +88,12 @@ export function DimensionTooltip({ dimension }: { dimension: DimensionKey }) {
         </svg>
       </button>
 
-      {/* Tooltip */}
       {isOpen && (
-        <div className="absolute z-50 w-64 p-3 bg-white dark:bg-surface-dark border border-slate-200 dark:border-white/10 rounded-lg shadow-xl left-1/2 -translate-x-1/2 bottom-full mb-2">
+        <div
+          ref={tooltipRef}
+          className="absolute z-50 bottom-full mb-2 w-64 p-3 bg-white dark:bg-surface-dark border border-slate-200 dark:border-white/10 rounded-lg shadow-xl"
+          style={{ left: '50%', transform: 'translateX(-50%)' }}
+        >
           <div className="text-xs space-y-2">
             <p className="font-semibold text-slate-900 dark:text-white">
               {info.description}
@@ -69,10 +101,6 @@ export function DimensionTooltip({ dimension }: { dimension: DimensionKey }) {
             <p className="text-slate-600 dark:text-slate-300">
               <span className="font-medium">Tip:</span> {info.tips}
             </p>
-          </div>
-          {/* Arrow */}
-          <div className="absolute left-1/2 -translate-x-1/2 top-full">
-            <div className="border-8 border-transparent border-t-white dark:border-t-surface-dark" />
           </div>
         </div>
       )}
