@@ -137,12 +137,12 @@ export default async function DashboardPage() {
           {/* Avg Score */}
           <div className="bg-surface-dark rounded-xl p-4 text-center border border-white/5">
             <div className="text-2xl font-bold text-whispie-primary">
-              {conversations?.filter(c => c.analysis?.[0]?.overall_score).length
+              {conversations?.filter(c => c.analysis?.overall_score != null).length
                 ? Math.round(
                     conversations
-                      .filter(c => c.analysis?.[0]?.overall_score)
-                      .reduce((sum, c) => sum + (c.analysis?.[0]?.overall_score || 0), 0) /
-                    conversations.filter(c => c.analysis?.[0]?.overall_score).length
+                      .filter(c => c.analysis?.overall_score != null)
+                      .reduce((sum, c) => sum + (c.analysis?.overall_score || 0), 0) /
+                    conversations.filter(c => c.analysis?.overall_score != null).length
                   )
                 : '--'}
             </div>
@@ -178,7 +178,7 @@ export default async function DashboardPage() {
             ...conv,
             scenario: conv.scenario as { title: string; category: string } | null,
             persona: conv.persona as { name: string; title: string } | null,
-            analysis: conv.analysis as { overall_score: number }[] | null,
+            analysis: conv.analysis as { overall_score: number } | null,
           })) || []} />
         </div>
       </main>

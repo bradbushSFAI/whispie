@@ -10,7 +10,7 @@ type ConversationItem = {
   created_at: string
   scenario: { title: string; category: string } | null
   persona: { name: string; title: string } | null
-  analysis: { overall_score: number }[] | null
+  analysis: { overall_score: number } | null
 }
 
 export function ConversationList({ conversations }: { conversations: ConversationItem[] }) {
@@ -76,7 +76,7 @@ export function ConversationList({ conversations }: { conversations: Conversatio
   return (
     <div className="space-y-3">
       {items.map((conv) => {
-        const score = conv.analysis?.[0]?.overall_score
+        const score = conv.analysis?.overall_score
         const isSwiped = swipedId === conv.id
 
         return (
