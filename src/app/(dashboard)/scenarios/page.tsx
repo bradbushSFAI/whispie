@@ -10,6 +10,9 @@ export default async function ScenariosPage({
   const { category } = await searchParams
   const supabase = await createClient()
 
+  // Get current user
+  const { data: { user } } = await supabase.auth.getUser()
+
   // Fetch scenarios with their personas
   let query = supabase
     .from('scenarios')
@@ -28,6 +31,24 @@ export default async function ScenariosPage({
 
   if (error) {
     console.error('Error fetching scenarios:', error)
+  }
+
+  // Fetch completed scenario IDs for current user
+  let completedScenarioIds = new Set<string>()
+  if (user) {
+    const { data: conversations } = await supabase
+      .from('conversations')
+      .select('scenario_id')
+      .eq('user_id', user.id)
+      .not('scenario_id', 'is', null)
+
+    if (conversations) {
+      completedScenarioIds = new Set(
+        conversations
+          .map(c => c.scenario_id)
+          .filter((id): id is string => id !== null)
+      )
+    }
   }
 
   // Get unique categories for filter
@@ -69,7 +90,11 @@ export default async function ScenariosPage({
         {scenarios && scenarios.length > 0 ? (
           <div className="flex flex-col gap-4">
             {scenarios.map((scenario) => (
-              <ScenarioCard key={scenario.id} scenario={scenario} />
+              <ScenarioCard
+                key={scenario.id}
+                scenario={scenario}
+                isCompleted={completedScenarioIds.has(scenario.id)}
+              />
             ))}
           </div>
         ) : (

@@ -25,13 +25,28 @@ const difficultyConfig = {
   },
 }
 
-export function ScenarioCard({ scenario }: { scenario: ScenarioWithPersona }) {
+export function ScenarioCard({
+  scenario,
+  isCompleted = false
+}: {
+  scenario: ScenarioWithPersona
+  isCompleted?: boolean
+}) {
   const difficulty = difficultyConfig[scenario.difficulty]
   const estimatedMinutes = scenario.estimated_turns * 1.5
 
   return (
     <Link href={`/chat/new?scenario=${scenario.id}`}>
       <article className="group relative flex flex-col bg-white dark:bg-surface-dark rounded-2xl p-4 shadow-sm ring-1 ring-gray-100 dark:ring-white/5 overflow-hidden active:scale-[0.99] transition-transform duration-200 hover:ring-whispie-primary/50">
+        {/* Completion Badge */}
+        {isCompleted && (
+          <div className="absolute top-3 right-3 flex items-center justify-center w-7 h-7 bg-whispie-primary rounded-full ring-2 ring-white dark:ring-surface-dark shadow-lg">
+            <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+        )}
+
         <div className="flex gap-4">
           {/* Avatar placeholder */}
           <div className="shrink-0 relative">
