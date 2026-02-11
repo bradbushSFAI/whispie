@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { ShareDialog } from '@/components/personas/share-dialog'
 import type { Persona } from '@/types/database'
 
-export function PersonaActions({ persona }: { persona: Persona }) {
+export function PersonaActions({ persona, scenarioCount }: { persona: Persona; scenarioCount: number }) {
   const router = useRouter()
   const [isDeleting, setIsDeleting] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
@@ -28,21 +28,28 @@ export function PersonaActions({ persona }: { persona: Persona }) {
     <>
       <div className="flex items-center gap-1">
         {showConfirm ? (
-          <>
-            <button
-              onClick={handleDelete}
-              disabled={isDeleting}
-              className="text-xs px-2 py-1 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
-            >
-              {isDeleting ? '...' : 'Delete'}
-            </button>
-            <button
-              onClick={() => setShowConfirm(false)}
-              className="text-xs px-2 py-1 rounded-lg text-slate-400 hover:text-slate-300 transition-colors"
-            >
-              Cancel
-            </button>
-          </>
+          <div className="flex flex-col items-end gap-1">
+            {scenarioCount > 0 && (
+              <p className="text-xs text-red-400">
+                This will also delete {scenarioCount} scenario{scenarioCount !== 1 ? 's' : ''}
+              </p>
+            )}
+            <div className="flex items-center gap-1">
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="text-xs px-2 py-1 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
+              >
+                {isDeleting ? '...' : 'Delete'}
+              </button>
+              <button
+                onClick={() => setShowConfirm(false)}
+                className="text-xs px-2 py-1 rounded-lg text-slate-400 hover:text-slate-300 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         ) : (
           <>
             {/* Share button */}

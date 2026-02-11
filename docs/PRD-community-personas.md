@@ -380,3 +380,80 @@ Stay in character at all times. These behavioral rules should feel natural, not 
 - Seed data: `supabase/migrations/002_seed_personas_scenarios.sql`
 - New migration: `supabase/migrations/007_community_personas.sql`
 - AI chat logic: check for system prompt construction (likely in `src/lib/` or API routes)
+
+---
+
+## Phase D — Upload Your... + Scenario Flow
+
+### D1: Upload Your... — AI-Powered Persona Creation
+
+**Path:** `/personas/upload`
+
+**Flow:**
+1. Pick relationship type (same picker as manual create)
+2. Paste emails/messages/correspondence (minimum 50 characters)
+3. AI analysis via `POST /api/personas/analyze` — sends text to Gemini 2.5 Pro, extracts name, title, description, personality traits, communication style, difficulty, and auto-generates custom_qa behavioral rules
+4. Editable review form (all fields adjustable before saving)
+5. Auto-generates a default scenario from correspondence via `POST /api/scenarios/generate`, then redirects to chat
+
+**API Routes:**
+- `POST /api/personas/analyze` — Gemini 2.5 Pro correspondence analysis
+- `POST /api/scenarios/generate` — Gemini 2.5 Pro scenario generation from persona + correspondence
+
+**UI:**
+- "Upload Your Boss / Coworker / Client" button on dashboard (prominent, with upload icon)
+- "Upload Your..." + "Create Manually" split buttons on My Personas page
+
+### D2: Default Scenario on Persona Creation
+
+- **Manual path:** After persona creation, redirects to `/personas/[id]/scenario/new` — user must create at least one scenario before practicing
+- **Upload path:** Auto-generates scenario from correspondence context via Gemini
+- Create persona wizard reduced from 5 to 4 steps (removed inline scenario step)
+
+**New Page:** `src/app/(dashboard)/personas/[id]/scenario/new/page.tsx` — scenario creation form (title, category, context, objectives)
+
+### D3: Cascade Delete + Constraint Rules
+
+- **Deleting a persona** cascades to delete ALL linked user scenarios (handled in API, not DB FK cascade)
+- Confirm dialog warns: "This will also delete X scenarios"
+- **Cannot delete the last scenario** on a persona — API returns 400, UI disables delete button
+
+**Updated API Routes:**
+- `DELETE /api/personas/[id]` — counts and deletes linked scenarios first
+- `DELETE /api/scenarios/[id]` — last scenario guard (400 if only 1 remains)
+
+### D4: My Scenarios Page
+
+**Path:** `/scenarios/my`
+
+- Lists user-created scenarios grouped by persona
+- Each card shows: title, category, difficulty, persona name, practice count, last practiced date
+- Actions: Delete (disabled if last scenario), Practice (start conversation)
+- "New scenario for [persona]" quick-create links at top
+- "My Scenarios" nav link on dashboard
+
+**Components:**
+- `src/app/(dashboard)/scenarios/my/page.tsx`
+- `src/app/(dashboard)/scenarios/my/scenario-actions.tsx`
+
+### D5: Community Scenarios Browsing
+
+- Added Personas/Scenarios tab toggle to `/community` page
+- Scenarios tab shows community-shared scenarios with same filter/sort/upvote pattern
+- "Try It" on a community scenario clones both the scenario AND its linked persona (if user doesn't already have it)
+
+**New API Routes:**
+- `GET /api/community/scenarios` — list public community scenarios with persona join
+- `POST /api/community/scenarios/[id]/clone` — clones scenario + auto-clones linked persona
+
+**New Component:**
+- `src/components/community/community-scenario-card.tsx`
+
+### Dashboard Navigation (Updated)
+
+```
+[Start Practice] [View Progress]
+[Upload Your Boss / Coworker / Client]
+[My Personas]    [My Scenarios]
+[Create Persona] [Community]
+```

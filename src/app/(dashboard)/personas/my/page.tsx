@@ -60,16 +60,27 @@ export default async function MyPersonasPage() {
       </header>
 
       <main className="max-w-2xl mx-auto px-4 py-6 pb-24">
-        {/* Create button */}
-        <Link
-          href="/personas/create"
-          className="flex items-center justify-center gap-2 w-full py-4 mb-6 rounded-2xl border-2 border-dashed border-white/20 text-slate-300 hover:border-whispie-primary/50 hover:text-whispie-primary transition-colors"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-          <span className="font-medium">Create New Persona</span>
-        </Link>
+        {/* Create buttons */}
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          <Link
+            href="/personas/upload"
+            className="flex flex-col items-center justify-center gap-2 py-4 rounded-2xl bg-whispie-primary hover:brightness-110 text-background-dark font-bold transition-all text-center"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            <span className="text-sm">Upload Your...</span>
+          </Link>
+          <Link
+            href="/personas/create"
+            className="flex flex-col items-center justify-center gap-2 py-4 rounded-2xl bg-surface-dark hover:bg-white/10 text-white font-bold border border-white/10 transition-colors text-center"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            <span className="text-sm">Create Manually</span>
+          </Link>
+        </div>
 
         {/* Personas list */}
         {personas && personas.length > 0 ? (
@@ -94,7 +105,7 @@ export default async function MyPersonasPage() {
                       </div>
                       <p className="text-slate-400 text-sm">{persona.title}</p>
                     </div>
-                    <PersonaActions persona={persona} />
+                    <PersonaActions persona={persona} scenarioCount={linkedScenarios.length} />
                   </div>
 
                   {/* Tags */}

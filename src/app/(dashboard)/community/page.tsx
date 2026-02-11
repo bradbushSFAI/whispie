@@ -5,53 +5,89 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { CommunityFilters } from '@/components/community/community-filters'
 import { CommunityCard } from '@/components/community/community-card'
-import type { Persona } from '@/types/database'
+import { CommunityScenarioCard } from '@/components/community/community-scenario-card'
+import type { Persona, Scenario } from '@/types/database'
+
+type Tab = 'personas' | 'scenarios'
 
 export default function CommunityPage() {
   const router = useRouter()
+  const [tab, setTab] = useState<Tab>('personas')
   const [tag, setTag] = useState('all')
   const [sort, setSort] = useState('upvotes')
+
+  // Personas state
   const [personas, setPersonas] = useState<Persona[]>([])
-  const [userVotes, setUserVotes] = useState<string[]>([])
-  const [total, setTotal] = useState(0)
+  const [personaVotes, setPersonaVotes] = useState<string[]>([])
+  const [personaTotal, setPersonaTotal] = useState(0)
+
+  // Scenarios state
+  const [scenarios, setScenarios] = useState<(Scenario & { persona?: { id: string; name: string; title: string; difficulty: string } | null })[]>([])
+  const [scenarioVotes, setScenarioVotes] = useState<string[]>([])
+  const [scenarioTotal, setScenarioTotal] = useState(0)
+
   const [isLoading, setIsLoading] = useState(true)
   const [cloningId, setCloningId] = useState<string | null>(null)
 
-  const fetchPersonas = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     setIsLoading(true)
     try {
       const params = new URLSearchParams({ sort })
       if (tag !== 'all') params.set('tag', tag)
 
-      const res = await fetch(`/api/community?${params}`)
-      if (res.ok) {
-        const data = await res.json()
-        setPersonas(data.personas)
-        setUserVotes(data.userVotes)
-        setTotal(data.total)
+      if (tab === 'personas') {
+        const res = await fetch(`/api/community?${params}`)
+        if (res.ok) {
+          const data = await res.json()
+          setPersonas(data.personas)
+          setPersonaVotes(data.userVotes)
+          setPersonaTotal(data.total)
+        }
+      } else {
+        const res = await fetch(`/api/community/scenarios?${params}`)
+        if (res.ok) {
+          const data = await res.json()
+          setScenarios(data.scenarios)
+          setScenarioVotes(data.userVotes)
+          setScenarioTotal(data.total)
+        }
       }
     } finally {
       setIsLoading(false)
     }
-  }, [tag, sort])
+  }, [tab, tag, sort])
 
   useEffect(() => {
-    fetchPersonas()
-  }, [fetchPersonas])
+    fetchData()
+  }, [fetchData])
 
-  const handleTryIt = async (personaId: string) => {
+  const handleTryPersona = async (personaId: string) => {
     setCloningId(personaId)
     try {
       const res = await fetch(`/api/community/${personaId}/clone`, { method: 'POST' })
       if (res.ok) {
         const { persona } = await res.json()
-        // Redirect to My Personas so user can start a conversation
         router.push(`/personas/${persona.id}/edit`)
       }
     } finally {
       setCloningId(null)
     }
   }
+
+  const handleTryScenario = async (scenarioId: string) => {
+    setCloningId(scenarioId)
+    try {
+      const res = await fetch(`/api/community/scenarios/${scenarioId}/clone`, { method: 'POST' })
+      if (res.ok) {
+        const { scenario } = await res.json()
+        router.push(`/chat/new?scenario=${scenario.id}`)
+      }
+    } finally {
+      setCloningId(null)
+    }
+  }
+
+  const total = tab === 'personas' ? personaTotal : scenarioTotal
 
   return (
     <div className="min-h-screen bg-background-dark">
@@ -72,6 +108,30 @@ export default function CommunityPage() {
       </header>
 
       <main className="max-w-2xl mx-auto px-4 py-6 pb-24">
+        {/* Tab toggle */}
+        <div className="flex bg-surface-dark rounded-xl p-1 mb-6 border border-white/5">
+          <button
+            onClick={() => setTab('personas')}
+            className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${
+              tab === 'personas'
+                ? 'bg-whispie-primary text-background-dark'
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            Personas
+          </button>
+          <button
+            onClick={() => setTab('scenarios')}
+            className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${
+              tab === 'scenarios'
+                ? 'bg-whispie-primary text-background-dark'
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            Scenarios
+          </button>
+        </div>
+
         {/* Filters */}
         <div className="mb-6">
           <CommunityFilters
@@ -85,9 +145,11 @@ export default function CommunityPage() {
         {/* Count */}
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-white font-bold text-lg">
-            {tag === 'all' ? 'All Personas' : `${tag.charAt(0).toUpperCase() + tag.slice(1)} Personas`}
+            {tag === 'all'
+              ? `All ${tab === 'personas' ? 'Personas' : 'Scenarios'}`
+              : `${tag.charAt(0).toUpperCase() + tag.slice(1)} ${tab === 'personas' ? 'Personas' : 'Scenarios'}`}
           </h2>
-          <span className="text-slate-400 text-sm">{total} personas</span>
+          <span className="text-slate-400 text-sm">{total} {tab}</span>
         </div>
 
         {/* Cards */}
@@ -102,34 +164,62 @@ export default function CommunityPage() {
               </div>
             ))}
           </div>
-        ) : personas.length > 0 ? (
-          <div className="flex flex-col gap-4">
-            {personas.map(persona => (
-              <CommunityCard
-                key={persona.id}
-                persona={persona}
-                initialVoted={userVotes.includes(persona.id)}
-                onTryIt={handleTryIt}
-                isCloning={cloningId === persona.id}
-              />
-            ))}
-          </div>
+        ) : tab === 'personas' ? (
+          personas.length > 0 ? (
+            <div className="flex flex-col gap-4">
+              {personas.map(persona => (
+                <CommunityCard
+                  key={persona.id}
+                  persona={persona}
+                  initialVoted={personaVotes.includes(persona.id)}
+                  onTryIt={handleTryPersona}
+                  isCloning={cloningId === persona.id}
+                />
+              ))}
+            </div>
+          ) : (
+            <EmptyState type="personas" />
+          )
         ) : (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <span className="text-5xl mb-4">🌍</span>
-            <h3 className="text-white font-bold text-lg mb-2">No community personas yet</h3>
-            <p className="text-slate-400 text-sm max-w-xs">
-              Be the first to share! Create a persona and share it with the community.
-            </p>
-            <Link
-              href="/personas/create"
-              className="mt-4 px-6 py-2.5 rounded-xl bg-whispie-primary text-background-dark font-bold text-sm hover:brightness-110 transition-all"
-            >
-              Create Persona
-            </Link>
-          </div>
+          scenarios.length > 0 ? (
+            <div className="flex flex-col gap-4">
+              {scenarios.map(scenario => (
+                <CommunityScenarioCard
+                  key={scenario.id}
+                  scenario={scenario}
+                  initialVoted={scenarioVotes.includes(scenario.id)}
+                  onTryIt={handleTryScenario}
+                  isCloning={cloningId === scenario.id}
+                />
+              ))}
+            </div>
+          ) : (
+            <EmptyState type="scenarios" />
+          )
         )}
       </main>
+    </div>
+  )
+}
+
+function EmptyState({ type }: { type: 'personas' | 'scenarios' }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-16 text-center">
+      <span className="text-5xl mb-4">{type === 'personas' ? '🌍' : '📋'}</span>
+      <h3 className="text-white font-bold text-lg mb-2">
+        No community {type} yet
+      </h3>
+      <p className="text-slate-400 text-sm max-w-xs">
+        {type === 'personas'
+          ? 'Be the first to share! Create a persona and share it with the community.'
+          : 'No shared scenarios yet. Community scenarios will appear here once shared.'}
+      </p>
+      <Link
+        href={type === 'personas' ? '/personas/create' : '/scenarios/my'}
+        className="mt-4 px-6 py-2.5 rounded-xl bg-whispie-primary text-background-dark font-bold text-sm hover:brightness-110 transition-all"
+      >
+        {type === 'personas' ? 'Create Persona' : 'My Scenarios'}
+      </Link>
     </div>
   )
 }

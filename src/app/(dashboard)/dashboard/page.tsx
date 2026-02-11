@@ -115,13 +115,30 @@ export default async function DashboardPage() {
             View Progress
           </Link>
         </div>
-        <div className="grid grid-cols-3 gap-3 mb-6">
+        <Link
+          href="/personas/upload"
+          className="flex items-center justify-center gap-2 w-full py-3 mb-4 rounded-2xl bg-surface-dark hover:bg-white/10 text-white font-bold transition-all border border-whispie-primary/30 hover:border-whispie-primary/60 text-sm"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+          </svg>
+          Upload Your Boss / Coworker / Client
+        </Link>
+        <div className="grid grid-cols-2 gap-3 mb-4">
           <Link
             href="/personas/my"
             className="bg-surface-dark hover:bg-white/10 text-white font-bold py-3 px-3 rounded-2xl transition-all border border-white/5 text-center text-sm"
           >
             My Personas
           </Link>
+          <Link
+            href="/scenarios/my"
+            className="bg-surface-dark hover:bg-white/10 text-white font-bold py-3 px-3 rounded-2xl transition-all border border-white/5 text-center text-sm"
+          >
+            My Scenarios
+          </Link>
+        </div>
+        <div className="grid grid-cols-3 gap-3 mb-6">
           <Link
             href="/personas/create"
             className="bg-surface-dark hover:bg-white/10 text-white font-bold py-3 px-3 rounded-2xl transition-all border border-white/5 text-center text-sm"

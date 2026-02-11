@@ -23,11 +23,6 @@ type FormData = {
   communication_style: string
   difficulty: 'easy' | 'medium' | 'hard'
   custom_qa: CustomQA[]
-  // Optional scenario
-  scenario_title: string
-  scenario_category: string
-  scenario_context: string
-  scenario_objectives: string
 }
 
 const INITIAL_FORM: FormData = {
@@ -39,10 +34,6 @@ const INITIAL_FORM: FormData = {
   communication_style: 'direct',
   difficulty: 'medium',
   custom_qa: [],
-  scenario_title: '',
-  scenario_category: 'conflict',
-  scenario_context: '',
-  scenario_objectives: '',
 }
 
 export default function CreatePersonaPage() {
@@ -52,7 +43,7 @@ export default function CreatePersonaPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const totalSteps = 5
+  const totalSteps = 4
 
   const canAdvance = () => {
     switch (step) {
@@ -60,7 +51,6 @@ export default function CreatePersonaPage() {
       case 2: return form.name.trim() && form.title.trim() && form.description.trim()
       case 3: return form.personality_traits.length > 0
       case 4: return true // Q&A is optional
-      case 5: return true // Scenario is optional
       default: return false
     }
   }
@@ -70,7 +60,6 @@ export default function CreatePersonaPage() {
     setError(null)
 
     try {
-      // Create persona
       const personaRes = await fetch('/api/personas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -92,28 +81,8 @@ export default function CreatePersonaPage() {
 
       const { persona } = await personaRes.json()
 
-      // Create linked scenario if provided
-      if (form.scenario_title.trim() && form.scenario_context.trim()) {
-        const objectives = form.scenario_objectives
-          .split('\n')
-          .map(o => o.trim())
-          .filter(Boolean)
-
-        await fetch('/api/scenarios', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            title: form.scenario_title.trim(),
-            category: form.scenario_category,
-            context: form.scenario_context.trim(),
-            objectives: objectives.length > 0 ? objectives : ['Practice this conversation effectively'],
-            persona_id: persona.id,
-            difficulty: form.difficulty,
-          }),
-        })
-      }
-
-      router.push('/personas/my')
+      // Redirect to create first scenario for this persona
+      router.push(`/personas/${persona.id}/scenario/new`)
     } catch {
       setError('Something went wrong. Please try again.')
     } finally {
@@ -243,7 +212,6 @@ export default function CreatePersonaPage() {
               <p className="text-slate-400 text-sm">Select traits that describe them</p>
             </div>
 
-            {/* Suggested traits */}
             {form.relationshipType && (
               <div>
                 <p className="text-xs uppercase tracking-wider text-slate-400 mb-2">Suggested</p>
@@ -265,7 +233,6 @@ export default function CreatePersonaPage() {
               </div>
             )}
 
-            {/* All traits */}
             <div>
               <p className="text-xs uppercase tracking-wider text-slate-400 mb-2">All traits</p>
               <div className="flex flex-wrap gap-2">
@@ -287,7 +254,6 @@ export default function CreatePersonaPage() {
               </div>
             </div>
 
-            {/* Communication style */}
             <div>
               <label className="text-sm font-medium text-slate-300 mb-1.5 block">Communication Style</label>
               <select
@@ -303,7 +269,6 @@ export default function CreatePersonaPage() {
               </select>
             </div>
 
-            {/* Difficulty */}
             <div>
               <label className="text-sm font-medium text-slate-300 mb-2 block">Difficulty</label>
               <div className="flex gap-3">
@@ -340,7 +305,6 @@ export default function CreatePersonaPage() {
               </p>
             </div>
 
-            {/* Template prompts from relationship type */}
             {form.relationshipType && form.custom_qa.length > 0 && (
               <div className="bg-surface-dark rounded-xl p-4 border border-white/5 mb-4">
                 <p className="text-xs uppercase tracking-wider text-slate-400 mb-3">
@@ -371,7 +335,6 @@ export default function CreatePersonaPage() {
               </div>
             )}
 
-            {/* Additional custom rules */}
             <div>
               <p className="text-xs uppercase tracking-wider text-slate-400 mb-3">Additional rules</p>
               <QAEditor
@@ -380,59 +343,6 @@ export default function CreatePersonaPage() {
                   const templateQa = form.custom_qa.slice(0, form.relationshipType?.qaTemplates.length || 0)
                   setForm(prev => ({ ...prev, custom_qa: [...templateQa, ...newQa] }))
                 }}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Step 5: Optional Scenario */}
-        {step === 5 && (
-          <div className="space-y-5">
-            <div>
-              <h2 className="text-xl font-bold text-white mb-2">Practice Scenario</h2>
-              <p className="text-slate-400 text-sm mb-6">
-                What situation do you want to practice? You can skip this and create scenarios later.
-              </p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-slate-300 mb-1.5 block">Scenario Title</label>
-              <Input
-                value={form.scenario_title}
-                onChange={e => setForm(prev => ({ ...prev, scenario_title: e.target.value }))}
-                placeholder='e.g. "Asking for a raise" or "Pushing back on scope creep"'
-                className="bg-surface-dark border-white/10 text-white placeholder:text-slate-500"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-slate-300 mb-1.5 block">Category</label>
-              <select
-                value={form.scenario_category}
-                onChange={e => setForm(prev => ({ ...prev, scenario_category: e.target.value }))}
-                className="flex h-9 w-full rounded-md border border-white/10 bg-surface-dark px-3 py-1 text-sm text-white shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-              >
-                <option value="feedback">Feedback</option>
-                <option value="negotiation">Negotiation</option>
-                <option value="conflict">Conflict</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-slate-300 mb-1.5 block">Context</label>
-              <Textarea
-                value={form.scenario_context}
-                onChange={e => setForm(prev => ({ ...prev, scenario_context: e.target.value }))}
-                placeholder="Describe the situation — what happened, what you need to address..."
-                rows={4}
-                className="bg-surface-dark border-white/10 text-white placeholder:text-slate-500"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-slate-300 mb-1.5 block">Your Objectives (one per line)</label>
-              <Textarea
-                value={form.scenario_objectives}
-                onChange={e => setForm(prev => ({ ...prev, scenario_objectives: e.target.value }))}
-                placeholder={"Address the issue calmly\nGet commitment to change\nMaintain the relationship"}
-                rows={3}
-                className="bg-surface-dark border-white/10 text-white placeholder:text-slate-500"
               />
             </div>
           </div>
@@ -450,44 +360,21 @@ export default function CreatePersonaPage() {
       <div className="fixed bottom-0 left-0 right-0 bg-background-dark/95 backdrop-blur-sm border-t border-white/10 p-4">
         <div className="max-w-2xl mx-auto flex gap-3">
           {step < totalSteps ? (
-            <>
-              {step === 4 && (
-                <Button
-                  variant="ghost"
-                  onClick={() => setStep(step + 1)}
-                  className="flex-1 text-slate-400"
-                >
-                  Skip
-                </Button>
-              )}
-              <Button
-                onClick={() => setStep(step + 1)}
-                disabled={!canAdvance()}
-                className="flex-1 bg-whispie-primary hover:brightness-110 text-background-dark font-bold"
-              >
-                Continue
-              </Button>
-            </>
+            <Button
+              onClick={() => setStep(step + 1)}
+              disabled={!canAdvance()}
+              className="flex-1 bg-whispie-primary hover:brightness-110 text-background-dark font-bold"
+            >
+              Continue
+            </Button>
           ) : (
-            <>
-              {form.scenario_title.trim() === '' && (
-                <Button
-                  variant="ghost"
-                  onClick={handleSubmit}
-                  disabled={isSubmitting}
-                  className="flex-1 text-slate-400"
-                >
-                  Skip & Create
-                </Button>
-              )}
-              <Button
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-                className="flex-1 bg-whispie-primary hover:brightness-110 text-background-dark font-bold"
-              >
-                {isSubmitting ? 'Creating...' : 'Create Persona'}
-              </Button>
-            </>
+            <Button
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+              className="flex-1 bg-whispie-primary hover:brightness-110 text-background-dark font-bold"
+            >
+              {isSubmitting ? 'Creating...' : 'Create Persona'}
+            </Button>
           )}
         </div>
       </div>
