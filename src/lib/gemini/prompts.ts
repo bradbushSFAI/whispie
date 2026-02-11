@@ -27,7 +27,10 @@ Stay fully in character as ${persona.name} throughout the conversation. React au
 5. If the user is doing well, gradually become slightly more receptive (but stay in character)
 6. If the user is being rude or aggressive, react as your character naturally would
 
-## User's Hidden Objectives (do not reference these directly)
+${persona.custom_qa && persona.custom_qa.length > 0 ? `## Behavioral Rules (follow these naturally during the conversation)
+${persona.custom_qa.map(qa => `- When ${qa.trigger}: ${qa.response}`).join('\n')}
+
+` : ''}## User's Hidden Objectives (do not reference these directly)
 The user is practicing workplace communication. Their goals are:
 ${objectivesList}
 

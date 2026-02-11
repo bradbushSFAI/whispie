@@ -87,5 +87,14 @@ export default async function NewChatPage({
       .eq('id', user.id)
   }
 
+  // Increment use_count on the persona (best-effort, won't block redirect)
+  if (scenario.persona_id) {
+    supabase
+      .from('personas')
+      .update({ use_count: (scenario.persona?.use_count || 0) + 1 })
+      .eq('id', scenario.persona_id)
+      .then(() => {})
+  }
+
   redirect(`/chat/${conversation.id}`)
 }

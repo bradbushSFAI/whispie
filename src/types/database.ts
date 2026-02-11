@@ -25,6 +25,12 @@ export type Profile = {
   updated_at: string
 }
 
+export type CustomQA = {
+  trigger: string
+  response: string
+  category: 'redirect' | 'escalate' | 'boundary' | 'emotional' | 'custom'
+}
+
 export type Persona = {
   id: string
   name: string
@@ -35,6 +41,13 @@ export type Persona = {
   avatar_url: string | null
   difficulty: 'easy' | 'medium' | 'hard'
   is_active: boolean
+  created_by: string | null
+  is_public: boolean
+  source: 'system' | 'user' | 'community'
+  upvotes: number
+  use_count: number
+  custom_qa: CustomQA[]
+  tags: string[]
   created_at: string
 }
 
@@ -50,6 +63,11 @@ export type Scenario = {
   estimated_turns: number
   is_premium: boolean
   is_active: boolean
+  created_by: string | null
+  is_public: boolean
+  source: 'system' | 'user' | 'community'
+  upvotes: number
+  use_count: number
   created_at: string
 }
 
@@ -107,6 +125,14 @@ export type UserAchievement = {
   unlocked_at: string
 }
 
+export type CommunityVote = {
+  id: string
+  user_id: string
+  target_type: 'persona' | 'scenario'
+  target_id: string
+  created_at: string
+}
+
 // Supabase Database type
 export type Database = {
   public: {
@@ -140,6 +166,11 @@ export type Database = {
         Row: Analysis
         Insert: Omit<Analysis, 'id' | 'created_at'>
         Update: Partial<Omit<Analysis, 'id' | 'created_at'>>
+      }
+      community_votes: {
+        Row: CommunityVote
+        Insert: Omit<CommunityVote, 'id' | 'created_at'>
+        Update: Partial<Omit<CommunityVote, 'id' | 'created_at'>>
       }
     }
   }

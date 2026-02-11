@@ -101,7 +101,7 @@ export default async function DashboardPage() {
         </Link>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-2 gap-4 mb-4">
           <Link
             href="/scenarios"
             className="bg-whispie-primary hover:brightness-110 text-background-dark font-bold py-4 px-5 rounded-2xl transition-all shadow-lg shadow-whispie-primary/20 text-center"
@@ -113,6 +113,26 @@ export default async function DashboardPage() {
             className="bg-surface-dark hover:bg-white/10 text-white font-bold py-4 px-5 rounded-2xl transition-all border border-white/5 text-center"
           >
             View Progress
+          </Link>
+        </div>
+        <div className="grid grid-cols-3 gap-3 mb-6">
+          <Link
+            href="/personas/my"
+            className="bg-surface-dark hover:bg-white/10 text-white font-bold py-3 px-3 rounded-2xl transition-all border border-white/5 text-center text-sm"
+          >
+            My Personas
+          </Link>
+          <Link
+            href="/personas/create"
+            className="bg-surface-dark hover:bg-white/10 text-white font-bold py-3 px-3 rounded-2xl transition-all border border-white/5 text-center text-sm"
+          >
+            Create Persona
+          </Link>
+          <Link
+            href="/community"
+            className="bg-surface-dark hover:bg-white/10 text-white font-bold py-3 px-3 rounded-2xl transition-all border border-white/5 text-center text-sm"
+          >
+            Community
           </Link>
         </div>
 
