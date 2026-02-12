@@ -65,7 +65,7 @@ export default async function ScenariosPage({
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 px-4 py-6 flex flex-col gap-5 pb-24">
+      <main className="max-w-2xl mx-auto px-4 py-6 flex flex-col gap-5 pb-24 w-full">
         {/* Section Header */}
         <div className="flex items-center justify-between">
           <h2 className="text-gray-900 dark:text-white text-lg font-bold">

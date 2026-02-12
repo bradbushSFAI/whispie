@@ -66,7 +66,7 @@ export function ScenarioCard({
 
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center justify-between mb-1 pr-8">
               <span className="text-xs font-semibold text-whispie-primary uppercase tracking-wider">
                 {scenario.category}
               </span>
