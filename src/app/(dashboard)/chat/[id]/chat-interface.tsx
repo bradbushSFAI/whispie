@@ -277,11 +277,32 @@ export function ChatInterface({
 
       {/* Chat Area */}
       <main className="flex-1 overflow-y-auto p-4 space-y-6">
-        {/* Scenario Context */}
-        <div className="flex justify-center my-4">
-          <span className="text-xs font-semibold text-slate-400 dark:text-slate-300 bg-slate-100 dark:bg-white/5 px-3 py-1 rounded-full">
-            {scenario.title}
-          </span>
+        {/* Scenario Backstory */}
+        <div className="mx-auto max-w-md mb-2">
+          <div className="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl p-4 space-y-3">
+            <div className="flex items-center gap-2">
+              <svg className="w-4 h-4 text-whispie-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="text-xs font-bold text-whispie-primary uppercase tracking-wide">Your Scenario</span>
+            </div>
+            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+              {scenario.context}
+            </p>
+            {scenario.objectives && scenario.objectives.length > 0 && (
+              <div className="pt-2 border-t border-slate-200 dark:border-white/10">
+                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5">Your goals:</p>
+                <ul className="space-y-1">
+                  {scenario.objectives.map((objective, i) => (
+                    <li key={i} className="flex items-start gap-2 text-xs text-slate-500 dark:text-slate-400">
+                      <span className="text-whispie-primary mt-0.5">•</span>
+                      <span>{objective}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Messages */}
