@@ -68,6 +68,7 @@ Respond ONLY with the JSON object, no other text.`
     return NextResponse.json({ extracted })
   } catch (err) {
     console.error('Error analyzing correspondence:', err)
-    return NextResponse.json({ error: 'Failed to analyze correspondence' }, { status: 500 })
+    const message = err instanceof Error ? err.message : 'Unknown error'
+    return NextResponse.json({ error: `Failed to analyze correspondence: ${message}` }, { status: 500 })
   }
 }
