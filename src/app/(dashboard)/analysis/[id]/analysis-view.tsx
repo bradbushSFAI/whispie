@@ -239,15 +239,10 @@ export function AnalysisView({
     }
   }, [initialAnalysis, generateAnalysis])
 
-  // Auto-scroll to analysis content when it becomes available
+  // Scroll to top on mount
   useEffect(() => {
-    if (analysis && analysisContentRef.current) {
-      // Small delay to ensure content is rendered
-      setTimeout(() => {
-        analysisContentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }, 100)
-    }
-  }, [analysis])
+    window.scrollTo(0, 0)
+  }, [])
 
   const { scenario, persona } = conversation
 
@@ -308,9 +303,10 @@ export function AnalysisView({
         </button>
       </header>
 
-      <div className="pb-32">
+      {/* Main Content Container */}
+      <div className="max-w-2xl mx-auto px-4 pb-32">
         {/* Hero Section */}
-        <div ref={analysisContentRef} className="flex flex-col items-center px-6 pt-6 pb-4 text-center">
+        <div ref={analysisContentRef} className="flex flex-col items-center pt-6 pb-4 text-center">
           <div className="mb-4 relative">
             <ScoreCircle score={analysis.overall_score || 0} />
             <div className="absolute -bottom-2 -right-2 bg-background-dark rounded-full p-1 border-4 border-background-dark">
@@ -328,7 +324,7 @@ export function AnalysisView({
         </div>
 
         {/* Score Breakdown */}
-        <div className="px-4 py-4">
+        <div className="py-4">
           <h3 className="text-white text-lg font-bold mb-4 px-1">Score Breakdown</h3>
           <div className="bg-surface-dark rounded-xl p-4 border border-white/5">
             <RadarChart
@@ -344,7 +340,7 @@ export function AnalysisView({
 
         {/* Strengths */}
         {analysis.strengths && analysis.strengths.length > 0 && (
-          <div className="px-4 py-4">
+          <div className="py-4">
             <h3 className="text-white text-lg font-bold mb-4 px-1">What You Did Well</h3>
             <div className="space-y-3">
               {analysis.strengths.map((strength, i) => (
@@ -368,7 +364,7 @@ export function AnalysisView({
 
         {/* Improvements */}
         {analysis.improvements && analysis.improvements.length > 0 && (
-          <div className="px-4 py-4">
+          <div className="py-4">
             <h3 className="text-white text-lg font-bold mb-4 px-1">Areas to Improve</h3>
             <div className="space-y-3">
               {analysis.improvements.map((improvement, i) => (
@@ -392,7 +388,7 @@ export function AnalysisView({
 
         {/* Persona Perspective */}
         {analysis.persona_perspective && analysis.persona_perspective.length > 0 && (
-          <div className="px-4 py-4">
+          <div className="py-4">
             <h3 className="text-white text-lg font-bold mb-4 px-1">What Was {persona.name} Thinking?</h3>
             <div className="space-y-3">
               {analysis.persona_perspective.map((thought, i) => (
@@ -415,7 +411,7 @@ export function AnalysisView({
         )}
 
         {/* Scenario Context */}
-        <div className="px-4 py-4">
+        <div className="py-4">
           <div className="bg-surface-dark rounded-xl p-4 border border-white/5">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 rounded-full bg-subtle-dark flex items-center justify-center text-lg">
