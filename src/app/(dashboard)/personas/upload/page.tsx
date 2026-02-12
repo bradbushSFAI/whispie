@@ -381,7 +381,7 @@ export default function UploadPersonaPage() {
 
       {/* Bottom action bar */}
       {step !== 3 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-background-dark/95 backdrop-blur-sm border-t border-white/10 p-4">
+        <div className="sticky bottom-0 left-0 right-0 bg-background-dark/95 backdrop-blur-sm border-t border-white/10 p-4">
           <div className="max-w-2xl mx-auto flex gap-3">
             {step === 1 && (
               <Button
