@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 
 // Generate array of avatar filenames
-const AVATAR_OPTIONS = Array.from({ length: 30 }, (_, i) => `avatar-${String(i + 1).padStart(2, '0')}.svg`)
+const AVATAR_OPTIONS = Array.from({ length: 30 }, (_, i) => `avatar-${String(i + 1).padStart(2, '0')}.webp`)
 
 function hashString(str: string): number {
   let hash = 0
