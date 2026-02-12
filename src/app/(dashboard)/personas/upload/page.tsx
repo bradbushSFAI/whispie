@@ -106,29 +106,34 @@ export default function UploadPersonaPage() {
     }
   }
 
-  const handleSubmit = async () => {
+  // Shared persona creation logic
+  const handleCreatePersona = async () => {
+    const personaRes = await fetch('/api/personas', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: form.name.trim(),
+        title: form.title.trim(),
+        description: form.description.trim(),
+        personality_traits: form.personality_traits,
+        communication_style: form.communication_style,
+        difficulty: form.difficulty,
+        custom_qa: form.custom_qa.filter(qa => qa.trigger.trim() && qa.response.trim()),
+        tags: relationshipType ? [relationshipType.tag] : [],
+      }),
+    })
+
+    if (!personaRes.ok) throw new Error('Failed to create persona')
+    const { persona } = await personaRes.json()
+    return persona
+  }
+
+  const handleAutoGenerate = async () => {
     setIsSubmitting(true)
     setSubmitError(null)
 
     try {
-      // Create persona
-      const personaRes = await fetch('/api/personas', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: form.name.trim(),
-          title: form.title.trim(),
-          description: form.description.trim(),
-          personality_traits: form.personality_traits,
-          communication_style: form.communication_style,
-          difficulty: form.difficulty,
-          custom_qa: form.custom_qa.filter(qa => qa.trigger.trim() && qa.response.trim()),
-          tags: relationshipType ? [relationshipType.tag] : [],
-        }),
-      })
-
-      if (!personaRes.ok) throw new Error('Failed to create persona')
-      const { persona } = await personaRes.json()
+      const persona = await handleCreatePersona()
 
       // Auto-generate scenario from correspondence
       const scenarioRes = await fetch('/api/scenarios/generate', {
@@ -148,6 +153,20 @@ export default function UploadPersonaPage() {
 
       const { scenario } = await scenarioRes.json()
       router.push(`/chat/new?scenario=${scenario.id}`)
+    } catch {
+      setSubmitError('Something went wrong. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleManualScenario = async () => {
+    setIsSubmitting(true)
+    setSubmitError(null)
+
+    try {
+      const persona = await handleCreatePersona()
+      router.push(`/personas/${persona.id}/scenario/new`)
     } catch {
       setSubmitError('Something went wrong. Please try again.')
     } finally {
@@ -406,13 +425,23 @@ export default function UploadPersonaPage() {
               </Button>
             )}
             {step === 4 && (
-              <Button
-                onClick={handleSubmit}
-                disabled={!canAdvance() || isSubmitting}
-                className="flex-1 bg-whispie-primary hover:brightness-110 text-background-dark font-bold"
-              >
-                {isSubmitting ? 'Creating & Generating Scenario...' : 'Create & Start Practicing'}
-              </Button>
+              <div className="flex flex-col gap-3 flex-1">
+                <Button
+                  onClick={handleAutoGenerate}
+                  disabled={!canAdvance() || isSubmitting}
+                  className="bg-whispie-primary hover:brightness-110 text-background-dark font-bold"
+                >
+                  {isSubmitting ? 'Creating & Generating Scenario...' : 'Auto-Generate Scenario'}
+                </Button>
+                <Button
+                  onClick={handleManualScenario}
+                  disabled={!canAdvance() || isSubmitting}
+                  variant="outline"
+                  className="border-white/20 text-white hover:bg-white/10"
+                >
+                  {isSubmitting ? 'Creating...' : "I'll Write My Own"}
+                </Button>
+              </div>
             )}
           </div>
         </div>
