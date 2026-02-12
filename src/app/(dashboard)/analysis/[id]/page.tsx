@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { NavHeader } from '@/components/layout/nav-header'
 import { AnalysisView } from './analysis-view'
 
 export default async function AnalysisPage({
@@ -47,10 +48,13 @@ export default async function AnalysisPage({
     .single()
 
   return (
-    <AnalysisView
-      conversation={conversation}
-      initialAnalysis={existingAnalysis}
-      userName={profile?.display_name || 'there'}
-    />
+    <>
+      <NavHeader displayName={profile?.display_name || user.email?.split('@')[0] || 'User'} />
+      <AnalysisView
+        conversation={conversation}
+        initialAnalysis={existingAnalysis}
+        userName={profile?.display_name || 'there'}
+      />
+    </>
   )
 }
