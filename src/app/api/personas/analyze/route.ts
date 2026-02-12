@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { analysisModel, analysisConfig } from '@/lib/gemini/client'
+import { model, generationConfig } from '@/lib/gemini/client'
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient()
@@ -52,9 +52,9 @@ Valid categories for custom_qa: "emotional", "redirect", "escalate", "boundary"
 Respond ONLY with the JSON object, no other text.`
 
   try {
-    const result = await analysisModel.generateContent({
+    const result = await model.generateContent({
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
-      generationConfig: { ...analysisConfig, maxOutputTokens: 2048 },
+      generationConfig: { ...generationConfig, temperature: 0.3, maxOutputTokens: 2048 },
     })
 
     const text = result.response.text().trim()
