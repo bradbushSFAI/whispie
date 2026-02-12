@@ -162,7 +162,7 @@ export default async function ProgressPage() {
                   {[...recentAnalyses].reverse().map((conv, i) => {
                     const score = (conv.analysis as any)?.overall_score || 0
                     return (
-                      <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                      <div key={i} className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
                         <div
                           className={`w-full rounded-t transition-all ${
                             score >= 80 ? 'bg-whispie-primary' :
