@@ -87,21 +87,7 @@ export default async function ProgressPage() {
 
   return (
     <div className="min-h-screen bg-background-dark">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-background-dark/95 backdrop-blur-sm border-b border-white/10 px-4 py-4">
-        <div className="max-w-2xl mx-auto flex items-center justify-between">
-          <Link
-            href="/dashboard"
-            className="flex items-center justify-center size-10 rounded-full hover:bg-white/10 text-white transition-colors"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </Link>
-          <h1 className="text-lg font-bold text-white">Progress</h1>
-          <div className="w-10" />
-        </div>
-      </header>
+      <NavHeader displayName={profile.display_name || 'User'} />
 
       <main className="max-w-2xl mx-auto px-4 py-6 pb-24">
         {/* Level Card */}
@@ -129,89 +115,9 @@ export default async function ProgressPage() {
             <p className="text-xs text-slate-300">{xpForLevel(level)} XP</p>
             <p className="text-xs text-slate-300">{nextLevelXp} XP</p>
           </div>
-        </div>
-
-        {/* All Levels */}
-        <div className="mb-8">
-          <h3 className="text-lg font-bold text-white mb-4">All Levels</h3>
-          <div className="bg-surface-dark rounded-2xl p-4 border border-white/5">
-            <div className="space-y-3">
-              {allLevels.map((lvl) => (
-                <div
-                  key={lvl.level}
-                  className={`relative rounded-lg p-3 transition-all ${
-                    lvl.isCurrent
-                      ? 'bg-whispie-primary/20 border-2 border-whispie-primary ring-2 ring-whispie-primary/50'
-                      : lvl.isUnlocked
-                      ? 'bg-white/5 border border-whispie-primary/20'
-                      : 'bg-white/5 border border-white/5 opacity-50'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    {/* Level Badge */}
-                    <div
-                      className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg ${
-                        lvl.isCurrent
-                          ? 'bg-whispie-primary text-background-dark'
-                          : lvl.isUnlocked
-                          ? 'bg-whispie-primary/50 text-white'
-                          : 'bg-white/10 text-slate-400'
-                      }`}
-                    >
-                      {lvl.isUnlocked ? lvl.level : '🔒'}
-                    </div>
-
-                    {/* Level Info */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2">
-                        <p
-                          className={`font-bold text-sm ${
-                            lvl.isCurrent
-                              ? 'text-whispie-primary'
-                              : lvl.isUnlocked
-                              ? 'text-white'
-                              : 'text-slate-400'
-                          }`}
-                        >
-                          Level {lvl.level}
-                          {lvl.isCurrent && <span className="ml-2 text-xs">(Current)</span>}
-                        </p>
-                        <p
-                          className={`text-xs ${
-                            lvl.isUnlocked ? 'text-slate-300' : 'text-slate-500'
-                          }`}
-                        >
-                          {lvl.xpRequired.toLocaleString()} XP
-                        </p>
-                      </div>
-                      <p
-                        className={`text-xs ${
-                          lvl.isUnlocked ? 'text-slate-300' : 'text-slate-500'
-                        }`}
-                      >
-                        {lvl.title}
-                      </p>
-
-                      {/* Progress bar for current level */}
-                      {lvl.isCurrent && (
-                        <div className="mt-2">
-                          <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-whispie-primary rounded-full transition-all"
-                              style={{ width: `${progress}%` }}
-                            />
-                          </div>
-                          <p className="text-xs text-slate-300 mt-1">
-                            {nextLevelXp - xp} XP to next level
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <a href="#all-levels" className="block text-center text-xs text-whispie-primary mt-3 hover:underline">
+            View all levels
+          </a>
         </div>
 
         {/* Stats Grid */}
@@ -280,7 +186,7 @@ export default async function ProgressPage() {
         </div>
 
         {/* Achievements */}
-        <div>
+        <div className="mb-8">
           <h3 className="text-lg font-bold text-white mb-4">
             Achievements ({userAchievements?.length || 0}/{achievements?.length || 0})
           </h3>
@@ -326,6 +232,84 @@ export default async function ProgressPage() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* All Levels */}
+        <div id="all-levels" className="scroll-mt-20">
+          <h3 className="text-lg font-bold text-white mb-4">All Levels</h3>
+          <div className="bg-surface-dark rounded-2xl p-4 border border-white/5">
+            <div className="space-y-3">
+              {allLevels.map((lvl) => (
+                <div
+                  key={lvl.level}
+                  className={`relative rounded-lg p-3 transition-all ${
+                    lvl.isCurrent
+                      ? 'bg-whispie-primary/20 border-2 border-whispie-primary ring-2 ring-whispie-primary/50'
+                      : lvl.isUnlocked
+                      ? 'bg-white/5 border border-whispie-primary/20'
+                      : 'bg-white/5 border border-white/5 opacity-50'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg ${
+                        lvl.isCurrent
+                          ? 'bg-whispie-primary text-background-dark'
+                          : lvl.isUnlocked
+                          ? 'bg-whispie-primary/50 text-white'
+                          : 'bg-white/10 text-slate-400'
+                      }`}
+                    >
+                      {lvl.isUnlocked ? lvl.level : '🔒'}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <p
+                          className={`font-bold text-sm ${
+                            lvl.isCurrent
+                              ? 'text-whispie-primary'
+                              : lvl.isUnlocked
+                              ? 'text-white'
+                              : 'text-slate-400'
+                          }`}
+                        >
+                          Level {lvl.level}
+                          {lvl.isCurrent && <span className="ml-2 text-xs">(Current)</span>}
+                        </p>
+                        <p
+                          className={`text-xs ${
+                            lvl.isUnlocked ? 'text-slate-300' : 'text-slate-500'
+                          }`}
+                        >
+                          {lvl.xpRequired.toLocaleString()} XP
+                        </p>
+                      </div>
+                      <p
+                        className={`text-xs ${
+                          lvl.isUnlocked ? 'text-slate-300' : 'text-slate-500'
+                        }`}
+                      >
+                        {lvl.title}
+                      </p>
+                      {lvl.isCurrent && (
+                        <div className="mt-2">
+                          <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-whispie-primary rounded-full transition-all"
+                              style={{ width: `${progress}%` }}
+                            />
+                          </div>
+                          <p className="text-xs text-slate-300 mt-1">
+                            {nextLevelXp - xp} XP to next level
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </main>
     </div>

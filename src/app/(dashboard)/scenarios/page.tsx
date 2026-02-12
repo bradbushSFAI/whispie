@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { ScenarioCard } from '@/components/scenarios/scenario-card'
 import { CategoryFilter } from './category-filter'
+import { NavHeader } from '@/components/layout/nav-header'
 
 export default async function ScenariosPage({
   searchParams,
@@ -56,23 +57,12 @@ export default async function ScenariosPage({
 
   return (
     <div className="min-h-screen bg-background-light dark:bg-background-dark">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-gray-200 dark:border-white/5">
-        <div className="flex items-center justify-between px-4 py-3">
-          <a href="/dashboard" className="flex items-center justify-center p-2 -ml-2 rounded-full text-gray-900 dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </a>
-          <h1 className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">
-            Scenario Library
-          </h1>
-          <div className="w-10"></div>
-        </div>
+      <NavHeader displayName={user?.email?.split('@')[0] || 'User'} />
 
-        {/* Category Filter */}
+      {/* Category Filter */}
+      <div className="sticky top-[57px] z-40 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-gray-200 dark:border-white/5">
         <CategoryFilter categories={categories} currentCategory={category || 'all'} />
-      </header>
+      </div>
 
       {/* Main Content */}
       <main className="flex-1 px-4 py-6 flex flex-col gap-5 pb-24">
