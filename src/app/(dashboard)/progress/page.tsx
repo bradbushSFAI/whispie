@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { levelProgress, xpForLevel, levelTitle } from '@/lib/gamification'
 import { streakMessage } from '@/lib/gamification/streaks'
+import { NavHeader } from '@/components/layout/nav-header'
 import type { Achievement } from '@/types/database'
 
 export default async function ProgressPage() {

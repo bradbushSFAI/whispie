@@ -3,7 +3,7 @@ import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { analysisModel, analysisConfig, buildAnalysisPrompt } from '@/lib/gemini'
 import { xpFromScore, calculateTotalXp, levelFromXp } from '@/lib/gamification'
 import { updateStreak } from '@/lib/gamification/streaks'
-import type { Scenario, Profile } from '@/types/database'
+import type { Scenario, Persona, Profile } from '@/types/database'
 
 export async function POST(
   request: NextRequest,
@@ -22,7 +22,7 @@ export async function POST(
   // Get conversation with scenario
   const { data: conversation, error: convError } = await supabase
     .from('conversations')
-    .select('*, scenario:scenarios(*)')
+    .select('*, scenario:scenarios(*), persona:personas(*)')
     .eq('id', conversationId)
     .eq('user_id', user.id)
     .single()
@@ -62,7 +62,8 @@ export async function POST(
 
   // Build analysis prompt
   const scenario = conversation.scenario as Scenario
-  const analysisPrompt = buildAnalysisPrompt(scenario, messages)
+  const persona = conversation.persona as Persona | null
+  const analysisPrompt = buildAnalysisPrompt(scenario, messages, persona ?? undefined)
 
   try {
     // Generate analysis with Gemini 2.5 Pro (thinking enabled)
@@ -102,6 +103,7 @@ export async function POST(
         strengths: analysisData.strengths,
         improvements: analysisData.improvements,
         summary: analysisData.summary,
+        persona_perspective: analysisData.persona_perspective,
       })
       .select()
       .single()

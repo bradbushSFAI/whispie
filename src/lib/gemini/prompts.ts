@@ -41,7 +41,8 @@ Start the conversation in character. Your opening line should set the scene base
 
 export function buildAnalysisPrompt(
   scenario: Scenario,
-  messages: Array<{ role: string; content: string }>
+  messages: Array<{ role: string; content: string }>,
+  persona?: Persona
 ): string {
   const conversationText = messages
     .filter((m) => m.role !== 'system')
@@ -52,12 +53,20 @@ export function buildAnalysisPrompt(
     .map((obj, i) => `${i + 1}. ${obj}`)
     .join('\n')
 
+  const personaContext = persona
+    ? `\n## Persona
+**Name:** ${persona.name}
+**Title:** ${persona.title}
+**Personality Traits:** ${persona.personality_traits.join(', ')}
+**Communication Style:** ${persona.communication_style}\n`
+    : ''
+
   return `Analyze this workplace conversation practice session.
 
 ## Scenario
 **Title:** ${scenario.title}
 **Context:** ${scenario.context}
-
+${personaContext}
 ## User's Objectives
 ${objectivesList}
 
@@ -74,7 +83,8 @@ Provide a JSON response with this exact structure:
   "professionalism_score": <0-100>,
   "strengths": ["strength 1", "strength 2", "strength 3"],
   "improvements": ["improvement 1", "improvement 2", "improvement 3"],
-  "summary": "2-3 sentence summary of how they did"
+  "summary": "2-3 sentence summary of how they did",
+  "persona_perspective": ["first-person thought 1", "first-person thought 2", "first-person thought 3"]
 }
 
 ## Scoring Criteria
@@ -83,6 +93,9 @@ Provide a JSON response with this exact structure:
 - **Empathy:** Did they acknowledge the other person's perspective?
 - **Assertiveness:** Did they advocate for themselves appropriately?
 - **Professionalism:** Did they maintain professional tone and boundaries?
+
+## Persona Perspective
+For the "persona_perspective" field, write 3-5 first-person observations from ${persona?.name || 'the persona'}'s point of view. These should be internal thoughts the persona had during the conversation, written in character. For example: "I noticed they didn't address my concern about the deadline directly..." or "When they acknowledged my frustration, I started to feel more open to their proposal."
 
 Be constructive but honest. This is a learning tool.
 

@@ -102,6 +102,7 @@ export type Analysis = {
   strengths: string[] | null
   improvements: string[] | null
   summary: string | null
+  persona_perspective: string[] | null
   created_at: string
 }
 

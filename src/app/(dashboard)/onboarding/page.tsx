@@ -63,7 +63,7 @@ export default function OnboardingPage() {
         .eq('id', user.id)
     }
 
-    router.push('/dashboard')
+    setLoading(false)
   }
 
   return (
@@ -235,9 +235,9 @@ export default function OnboardingPage() {
             </CardHeader>
             <CardContent className="space-y-6">
               <button
-                onClick={() => {
-                  completeOnboarding()
-                  router.push('/scenarios?category=feedback')
+                onClick={async () => {
+                  await completeOnboarding()
+                  router.push('/chat/new?scenario=b1c2d3e4-1111-4000-8000-000000000001')
                 }}
                 className="w-full text-left bg-slate-100 rounded-lg p-4 hover:bg-slate-200 transition-colors cursor-pointer"
               >
@@ -255,7 +255,10 @@ export default function OnboardingPage() {
                 </Button>
                 <Button
                   className="flex-1"
-                  onClick={completeOnboarding}
+                  onClick={async () => {
+                    await completeOnboarding()
+                    router.push('/dashboard')
+                  }}
                   disabled={loading}
                 >
                   {loading ? 'Setting up...' : 'Go to Dashboard'}

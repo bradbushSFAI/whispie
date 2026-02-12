@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { levelProgress, xpForLevel, levelTitle } from '@/lib/gamification'
 import { isStreakAtRisk } from '@/lib/gamification/streaks'
 import { ConversationList } from '@/components/dashboard/conversation-list'
+import { NavHeader } from '@/components/layout/nav-header'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -53,25 +54,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-background-dark">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-background-dark/95 backdrop-blur-sm border-b border-white/10 px-4 py-4">
-        <div className="max-w-2xl mx-auto flex items-center justify-between">
-          <h1 className="text-xl font-bold text-whispie-primary">Whispie</h1>
-          <div className="flex items-center gap-3">
-            <Link href="/progress" className="text-sm text-slate-300 hover:text-white transition-colors">
-              {profile?.display_name || user.email?.split('@')[0]}
-            </Link>
-            <form action="/api/auth/signout" method="post">
-              <button
-                type="submit"
-                className="text-sm text-slate-300 hover:text-white transition-colors"
-              >
-                Sign out
-              </button>
-            </form>
-          </div>
-        </div>
-      </header>
+      <NavHeader displayName={profile?.display_name || user.email?.split('@')[0] || 'User'} />
 
       <main className="max-w-2xl mx-auto px-4 py-6 pb-24">
         {/* Level & XP Card */}
@@ -124,34 +107,6 @@ export default async function DashboardPage() {
           </svg>
           Upload Your Boss / Coworker / Client
         </Link>
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          <Link
-            href="/personas/my"
-            className="bg-surface-dark hover:bg-white/10 text-white font-bold py-3 px-3 rounded-2xl transition-all border border-white/5 text-center text-sm"
-          >
-            My Personas
-          </Link>
-          <Link
-            href="/scenarios/my"
-            className="bg-surface-dark hover:bg-white/10 text-white font-bold py-3 px-3 rounded-2xl transition-all border border-white/5 text-center text-sm"
-          >
-            My Scenarios
-          </Link>
-        </div>
-        <div className="grid grid-cols-3 gap-3 mb-6">
-          <Link
-            href="/personas/create"
-            className="bg-surface-dark hover:bg-white/10 text-white font-bold py-3 px-3 rounded-2xl transition-all border border-white/5 text-center text-sm"
-          >
-            Create Persona
-          </Link>
-          <Link
-            href="/community"
-            className="bg-surface-dark hover:bg-white/10 text-white font-bold py-3 px-3 rounded-2xl transition-all border border-white/5 text-center text-sm"
-          >
-            Community
-          </Link>
-        </div>
 
         {/* Stats Row */}
         <div className="grid grid-cols-3 gap-3 mb-8">

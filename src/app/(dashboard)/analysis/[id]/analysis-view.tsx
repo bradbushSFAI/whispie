@@ -390,6 +390,30 @@ export function AnalysisView({
           </div>
         )}
 
+        {/* Persona Perspective */}
+        {analysis.persona_perspective && analysis.persona_perspective.length > 0 && (
+          <div className="px-4 py-4">
+            <h3 className="text-white text-lg font-bold mb-4 px-1">What Was {persona.name} Thinking?</h3>
+            <div className="space-y-3">
+              {analysis.persona_perspective.map((thought, i) => (
+                <div
+                  key={i}
+                  className="bg-surface-dark rounded-xl p-4 border-l-4 border-blue-400"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="mt-0.5 p-1.5 bg-blue-400/10 rounded-full text-blue-400 shrink-0">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+                      </svg>
+                    </div>
+                    <p className="text-slate-300 text-sm leading-relaxed italic">&ldquo;{thought}&rdquo;</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Scenario Context */}
         <div className="px-4 py-4">
           <div className="bg-surface-dark rounded-xl p-4 border border-white/5">
