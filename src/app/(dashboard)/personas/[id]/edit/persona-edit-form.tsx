@@ -76,7 +76,7 @@ export function PersonaEditForm({
       <header className="sticky top-0 z-50 bg-background-dark/95 backdrop-blur-sm border-b border-white/10">
         <div className="max-w-2xl mx-auto flex items-center justify-between px-4 py-3">
           <Link
-            href="/personas/my"
+            href="/hub"
             className="flex items-center justify-center p-2 -ml-2 rounded-full text-white hover:bg-white/10 transition-colors"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
