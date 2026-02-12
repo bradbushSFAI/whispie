@@ -58,12 +58,25 @@ Respond ONLY with the JSON object, no other text.`
     })
 
     const text = result.response.text().trim()
-    const jsonMatch = text.match(/\{[\s\S]*\}/)
-    if (!jsonMatch) {
-      throw new Error('Invalid response format')
+    console.log('Gemini raw response (first 500 chars):', text.substring(0, 500))
+    
+    // Try to find JSON in the response - handle markdown code blocks too
+    let jsonStr: string | null = null
+    const codeBlockMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/)
+    if (codeBlockMatch) {
+      jsonStr = codeBlockMatch[1].trim()
+    } else {
+      const jsonMatch = text.match(/\{[\s\S]*\}/)
+      if (jsonMatch) {
+        jsonStr = jsonMatch[0]
+      }
+    }
+    
+    if (!jsonStr) {
+      throw new Error(`Invalid response format. Response starts with: ${text.substring(0, 200)}`)
     }
 
-    const extracted = JSON.parse(jsonMatch[0])
+    const extracted = JSON.parse(jsonStr)
 
     return NextResponse.json({ extracted })
   } catch (err) {
