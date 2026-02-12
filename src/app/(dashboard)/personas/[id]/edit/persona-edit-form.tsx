@@ -181,34 +181,7 @@ export function PersonaEditForm({
           <QAEditor value={customQa} onChange={setCustomQa} />
         </section>
 
-        {/* Linked Scenarios */}
-        <section className="space-y-4">
-          <h2 className="text-white font-bold text-lg">Linked Scenarios</h2>
-          {scenarios.length > 0 ? (
-            <div className="space-y-2">
-              {scenarios.map(s => (
-                <div key={s.id} className="bg-surface-dark rounded-xl p-4 border border-white/5">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-xs font-semibold text-whispie-primary uppercase tracking-wider">
-                        {s.category}
-                      </span>
-                      <h4 className="text-white font-medium">{s.title}</h4>
-                    </div>
-                    <Link
-                      href={`/chat/new?scenario=${s.id}`}
-                      className="text-xs px-3 py-1.5 rounded-lg bg-whispie-primary/10 text-whispie-primary font-medium hover:bg-whispie-primary/20 transition-colors"
-                    >
-                      Practice
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-slate-400 text-sm">No scenarios linked to this persona yet.</p>
-          )}
-        </section>
+        {/* Linked Scenarios - removed, now managed from Hub */}
       </main>
 
       {/* Save bar */}
