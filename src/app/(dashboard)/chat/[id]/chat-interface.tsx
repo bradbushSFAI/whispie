@@ -100,6 +100,13 @@ export function ChatInterface({
     }
   }, [initialMessages.length, startConversation])
 
+  // Auto-focus input after AI finishes responding
+  useEffect(() => {
+    if (!isLoading) {
+      textareaRef.current?.focus()
+    }
+  }, [isLoading])
+
   async function sendMessage() {
     if (!input.trim() || isLoading) return
 
