@@ -112,7 +112,7 @@ export default function NewScenarioForPersonaPage() {
             value={context}
             onChange={e => setContext(e.target.value)}
             placeholder="Describe the situation — what happened, what you need to address..."
-            rows={4}
+            rows={3}
             className="bg-surface-dark border-white/10 text-white placeholder:text-slate-500"
           />
         </div>
@@ -123,7 +123,7 @@ export default function NewScenarioForPersonaPage() {
             value={objectives}
             onChange={e => setObjectives(e.target.value)}
             placeholder={"Address the issue calmly\nGet commitment to change\nMaintain the relationship"}
-            rows={3}
+            rows={2}
             className="bg-surface-dark border-white/10 text-white placeholder:text-slate-500"
           />
         </div>
