@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
-import { analysisModel, analysisConfig, buildAnalysisPrompt } from '@/lib/gemini'
+import { model, generationConfig } from '@/lib/gemini/client'
+import { buildAnalysisPrompt } from '@/lib/gemini'
 import { xpFromScore, calculateTotalXp, levelFromXp } from '@/lib/gamification'
 import { updateStreak } from '@/lib/gamification/streaks'
 import type { Scenario, Persona, Profile } from '@/types/database'
@@ -66,11 +67,11 @@ export async function POST(
   const analysisPrompt = buildAnalysisPrompt(scenario, messages, persona ?? undefined)
 
   try {
-    // Generate analysis with Gemini 2.5 Pro (thinking enabled)
-    console.log('[analyze] Using Gemini 2.5 Pro with thinking for analysis')
-    const result = await analysisModel.generateContent({
+    // Generate analysis with Gemini 2.0 Flash
+    console.log('[analyze] Using Gemini 2.0 Flash for analysis')
+    const result = await model.generateContent({
       contents: [{ role: 'user', parts: [{ text: analysisPrompt }] }],
-      generationConfig: analysisConfig,
+      generationConfig: generationConfig,
     })
 
     const responseText = result.response.text()
