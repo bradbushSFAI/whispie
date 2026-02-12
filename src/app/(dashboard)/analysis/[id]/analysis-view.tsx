@@ -433,7 +433,7 @@ export function AnalysisView({
       <div className="fixed bottom-0 left-0 right-0 bg-background-dark/95 backdrop-blur-md border-t border-white/10 p-4 pb-8">
         <div className="flex gap-3 max-w-md mx-auto">
           <button
-            onClick={() => router.push('/hub')}
+            onClick={() => router.push('/dashboard')}
             className="w-auto px-4 flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold py-2.5 rounded-xl transition-all text-sm md:text-base"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
