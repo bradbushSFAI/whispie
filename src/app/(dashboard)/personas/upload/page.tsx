@@ -80,7 +80,10 @@ export default function UploadPersonaPage() {
         }),
       })
 
-      if (!res.ok) throw new Error('Analysis failed')
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}))
+        throw new Error(errData.error || `Analysis failed (${res.status})`)
+      }
 
       const { extracted } = await res.json()
 
@@ -95,8 +98,9 @@ export default function UploadPersonaPage() {
       })
 
       setStep(4)
-    } catch {
-      setAnalyzeError('Failed to analyze the correspondence. Please try again.')
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Unknown error'
+      setAnalyzeError(`Failed to analyze: ${msg}`)
     } finally {
       setIsAnalyzing(false)
     }
