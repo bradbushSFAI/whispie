@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { QAEditor } from '@/components/personas/qa-editor'
+import { AvatarPicker } from '@/components/personas/avatar-picker'
 import {
   RELATIONSHIP_TYPES,
   ALL_TRAITS,
@@ -23,6 +24,7 @@ type ExtractedData = {
   communication_style: string
   difficulty: 'easy' | 'medium' | 'hard'
   custom_qa: CustomQA[]
+  avatar_url: string
 }
 
 export default function UploadPersonaPage() {
@@ -49,6 +51,7 @@ export default function UploadPersonaPage() {
     communication_style: 'direct',
     difficulty: 'medium',
     custom_qa: [],
+    avatar_url: '',
   })
 
   // Submission
@@ -95,6 +98,7 @@ export default function UploadPersonaPage() {
         communication_style: extracted.communication_style || 'direct',
         difficulty: extracted.difficulty || 'medium',
         custom_qa: extracted.custom_qa || [],
+        avatar_url: '',
       })
 
       setStep(4)
@@ -120,6 +124,7 @@ export default function UploadPersonaPage() {
         difficulty: form.difficulty,
         custom_qa: form.custom_qa.filter(qa => qa.trigger.trim() && qa.response.trim()),
         tags: relationshipType ? [relationshipType.tag] : [],
+        avatar_url: form.avatar_url || '',
       }),
     })
 
@@ -329,6 +334,12 @@ export default function UploadPersonaPage() {
                 className="bg-surface-dark border-white/10 text-white"
               />
             </div>
+
+            <AvatarPicker
+              value={form.avatar_url}
+              onChange={avatar_url => setForm(prev => ({ ...prev, avatar_url }))}
+              personaName={form.name}
+            />
 
             <div>
               <label className="text-sm font-medium text-slate-300 mb-2 block">Personality Traits</label>

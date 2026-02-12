@@ -1,0 +1,28 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle - sage green -->
+  <circle cx="64" cy="64" r="64" fill="#9caf88"/>
+
+  <!-- Face shape -->
+  <ellipse cx="64" cy="69" rx="27" ry="31" fill="#f4e4bc"/>
+
+  <!-- Hair - messy bun -->
+  <ellipse cx="64" cy="46" rx="30" ry="25" fill="#d2691e"/>
+  <circle cx="64" cy="35" r="10" fill="#d2691e"/>
+
+  <!-- Eyes -->
+  <circle cx="59" cy="66" r="2" fill="#2c3e50"/>
+  <circle cx="69" cy="66" r="2" fill="#2c3e50"/>
+
+  <!-- Nose -->
+  <circle cx="64" cy="71" r="1" fill="#e6d3a3"/>
+
+  <!-- Mouth -->
+  <path d="M 61 77 Q 64 80 67 77" stroke="#2c3e50" stroke-width="1.5" fill="none"/>
+
+  <!-- Drop earrings -->
+  <ellipse cx="46" cy="72" rx="2" ry="4" fill="#e67e22"/>
+  <ellipse cx="82" cy="72" rx="2" ry="4" fill="#e67e22"/>
+
+  <!-- Casual top -->
+  <rect x="52" y="96" width="24" height="32" fill="#16a085"/>
+</svg>

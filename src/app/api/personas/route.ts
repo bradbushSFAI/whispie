@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
     difficulty,
     custom_qa,
     tags,
+    avatar_url,
   } = body
 
   if (!name || !title || !description) {
@@ -62,7 +63,7 @@ export async function POST(request: NextRequest) {
       source: 'user',
       is_public: false,
       is_active: true,
-      avatar_url: null,
+      avatar_url: avatar_url || null,
     })
     .select()
     .single()

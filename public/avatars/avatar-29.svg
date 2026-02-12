@@ -1,0 +1,26 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle - muted teal -->
+  <circle cx="64" cy="64" r="64" fill="#7fb069"/>
+
+  <!-- Face shape -->
+  <ellipse cx="64" cy="70" rx="28" ry="32" fill="#fdbcb4"/>
+
+  <!-- Hair - crew cut with fade -->
+  <ellipse cx="64" cy="44" rx="32" ry="24" fill="#2c3e50"/>
+
+  <!-- Eyes -->
+  <circle cx="58" cy="67" r="2" fill="#2c3e50"/>
+  <circle cx="70" cy="67" r="2" fill="#2c3e50"/>
+
+  <!-- Nose -->
+  <polygon points="64,72 62,76 66,76" fill="#f5a9a9"/>
+
+  <!-- Goatee -->
+  <ellipse cx="64" cy="82" rx="6" ry="4" fill="#2c3e50"/>
+
+  <!-- Mouth -->
+  <line x1="61" y1="78" x2="67" y2="78" stroke="#2c3e50" stroke-width="1.5"/>
+
+  <!-- T-shirt -->
+  <rect x="52" y="96" width="24" height="32" fill="#f39c12"/>
+</svg>

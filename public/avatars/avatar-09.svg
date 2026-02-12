@@ -1,0 +1,28 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle - lavender-slate -->
+  <circle cx="64" cy="64" r="64" fill="#a0a5c4"/>
+
+  <!-- Face shape -->
+  <ellipse cx="64" cy="69" rx="27" ry="31" fill="#ffdbac"/>
+
+  <!-- Hair - receding -->
+  <ellipse cx="64" cy="42" rx="28" ry="24" fill="#708090"/>
+  <ellipse cx="64" cy="36" rx="20" ry="18" fill="#a0a5c4"/>
+
+  <!-- Eyes -->
+  <circle cx="58" cy="66" r="2" fill="#2c3e50"/>
+  <circle cx="70" cy="66" r="2" fill="#2c3e50"/>
+
+  <!-- Reading glasses -->
+  <rect x="52" y="62" width="24" height="8" rx="4" fill="none" stroke="#2c3e50" stroke-width="1"/>
+
+  <!-- Nose -->
+  <ellipse cx="64" cy="72" rx="2" ry="4" fill="#f4a261"/>
+
+  <!-- Mouth -->
+  <path d="M 61 78 Q 64 80 67 78" stroke="#2c3e50" stroke-width="1"/>
+
+  <!-- Suit -->
+  <rect x="48" y="96" width="32" height="32" fill="#2c3e50"/>
+  <polygon points="60,96 64,96 68,96 66,104 62,104" fill="#c0392b"/>
+</svg>

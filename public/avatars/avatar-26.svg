@@ -1,0 +1,25 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle - sage green -->
+  <circle cx="64" cy="64" r="64" fill="#9caf88"/>
+
+  <!-- Face shape -->
+  <ellipse cx="64" cy="72" rx="24" ry="28" fill="#f4c2a1"/>
+
+  <!-- Hair - space buns -->
+  <ellipse cx="64" cy="48" rx="28" ry="24" fill="#ff1493"/>
+  <circle cx="48" cy="40" r="10" fill="#ff1493"/>
+  <circle cx="80" cy="40" r="10" fill="#ff1493"/>
+
+  <!-- Eyes -->
+  <circle cx="59" cy="69" r="2" fill="#2c3e50"/>
+  <circle cx="69" cy="69" r="2" fill="#2c3e50"/>
+
+  <!-- Nose -->
+  <circle cx="64" cy="74" r="1" fill="#f0a9a9"/>
+
+  <!-- Mouth -->
+  <ellipse cx="64" cy="80" rx="4" ry="2" fill="#e74c3c"/>
+
+  <!-- Tank top -->
+  <rect x="54" y="96" width="20" height="32" fill="#27ae60"/>
+</svg>

@@ -1,0 +1,24 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle - lavender-slate -->
+  <circle cx="64" cy="64" r="64" fill="#a0a5c4"/>
+
+  <!-- Face shape -->
+  <ellipse cx="64" cy="72" rx="26" ry="30" fill="#8b4513"/>
+
+  <!-- Hair - short natural -->
+  <ellipse cx="64" cy="48" rx="32" ry="28" fill="#000000"/>
+
+  <!-- Eyes -->
+  <circle cx="58" cy="69" r="2" fill="#2c3e50"/>
+  <circle cx="70" cy="69" r="2" fill="#2c3e50"/>
+
+  <!-- Nose -->
+  <ellipse cx="64" cy="75" rx="2" ry="4" fill="#a0522d"/>
+
+  <!-- Mouth -->
+  <path d="M 59 82 Q 64 86 69 82" stroke="#2c3e50" stroke-width="2" fill="none"/>
+
+  <!-- Professional attire -->
+  <rect x="48" y="96" width="32" height="32" fill="#2c3e50"/>
+  <rect x="60" y="96" width="8" height="32" fill="#3498db"/>
+</svg>

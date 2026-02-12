@@ -1,0 +1,26 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle - warm gray -->
+  <circle cx="64" cy="64" r="64" fill="#a8a8a8"/>
+
+  <!-- Face shape -->
+  <ellipse cx="64" cy="70" rx="27" ry="31" fill="#8d5524"/>
+
+  <!-- Hair - afro -->
+  <circle cx="64" cy="48" r="36" fill="#2c1810"/>
+
+  <!-- Eyes -->
+  <circle cx="58" cy="66" r="2" fill="#2c3e50"/>
+  <circle cx="70" cy="66" r="2" fill="#2c3e50"/>
+
+  <!-- Nose -->
+  <ellipse cx="64" cy="72" rx="2" ry="4" fill="#7a4a1f"/>
+
+  <!-- Mouth -->
+  <path d="M 59 79 Q 64 84 69 79" stroke="#2c3e50" stroke-width="2" fill="none"/>
+
+  <!-- Blazer -->
+  <rect x="46" y="96" width="36" height="32" fill="#2c3e50"/>
+  <!-- Lapels -->
+  <polygon points="46,96 54,96 58,104 46,104" fill="#34495e"/>
+  <polygon points="82,96 74,96 70,104 82,104" fill="#34495e"/>
+</svg>

@@ -1,0 +1,27 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle - dusty blue -->
+  <circle cx="64" cy="64" r="64" fill="#7a93ac"/>
+
+  <!-- Face shape -->
+  <ellipse cx="64" cy="70" rx="29" ry="33" fill="#e8d5b7"/>
+
+  <!-- Hair - man bun -->
+  <ellipse cx="64" cy="46" rx="32" ry="27" fill="#654321"/>
+  <circle cx="64" cy="38" r="6" fill="#654321"/>
+
+  <!-- Eyes -->
+  <circle cx="58" cy="66" r="2" fill="#2c3e50"/>
+  <circle cx="70" cy="66" r="2" fill="#2c3e50"/>
+
+  <!-- Stubble -->
+  <ellipse cx="64" cy="78" rx="10" ry="6" fill="#8b7355" opacity="0.6"/>
+
+  <!-- Nose -->
+  <ellipse cx="64" cy="71" rx="2" ry="4" fill="#dcc89c"/>
+
+  <!-- Mouth -->
+  <path d="M 61 77 Q 64 79 67 77" stroke="#2c3e50" stroke-width="1.5" fill="none"/>
+
+  <!-- Casual shirt -->
+  <rect x="50" y="96" width="28" height="32" fill="#2ecc71"/>
+</svg>

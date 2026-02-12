@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { QAEditor } from '@/components/personas/qa-editor'
+import { AvatarPicker } from '@/components/personas/avatar-picker'
 import {
   RELATIONSHIP_TYPES,
   ALL_TRAITS,
@@ -23,6 +24,7 @@ type FormData = {
   communication_style: string
   difficulty: 'easy' | 'medium' | 'hard'
   custom_qa: CustomQA[]
+  avatar_url: string
 }
 
 const INITIAL_FORM: FormData = {
@@ -34,6 +36,7 @@ const INITIAL_FORM: FormData = {
   communication_style: 'direct',
   difficulty: 'medium',
   custom_qa: [],
+  avatar_url: '',
 }
 
 export default function CreatePersonaPage() {
@@ -72,6 +75,7 @@ export default function CreatePersonaPage() {
           difficulty: form.difficulty,
           custom_qa: form.custom_qa.filter(qa => qa.trigger.trim() && qa.response.trim()),
           tags: form.relationshipType ? [form.relationshipType.tag] : [],
+          avatar_url: form.avatar_url || '',
         }),
       })
 
@@ -201,6 +205,11 @@ export default function CreatePersonaPage() {
                 className="bg-surface-dark border-white/10 text-white placeholder:text-slate-500"
               />
             </div>
+            <AvatarPicker
+              value={form.avatar_url}
+              onChange={avatar_url => setForm(prev => ({ ...prev, avatar_url }))}
+              personaName={form.name}
+            />
           </div>
         )}
 

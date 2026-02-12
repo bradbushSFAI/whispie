@@ -1,0 +1,31 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle - dusty blue -->
+  <circle cx="64" cy="64" r="64" fill="#7a93ac"/>
+
+  <!-- Face shape -->
+  <ellipse cx="64" cy="68" rx="30" ry="34" fill="#f8d7a3"/>
+
+  <!-- Hair - short blonde -->
+  <ellipse cx="64" cy="46" rx="34" ry="26" fill="#f4d03f"/>
+
+  <!-- Eyes -->
+  <circle cx="57" cy="63" r="2" fill="#2c3e50"/>
+  <circle cx="71" cy="63" r="2" fill="#2c3e50"/>
+
+  <!-- Glasses -->
+  <circle cx="57" cy="63" r="8" fill="none" stroke="#2c3e50" stroke-width="1.5"/>
+  <circle cx="71" cy="63" r="8" fill="none" stroke="#2c3e50" stroke-width="1.5"/>
+  <line x1="65" y1="63" x2="63" y2="63" stroke="#2c3e50" stroke-width="1.5"/>
+
+  <!-- Nose -->
+  <path d="M 64 68 L 62 72 L 66 72 Z" fill="#eed17a"/>
+
+  <!-- Mouth -->
+  <ellipse cx="64" cy="78" rx="4" ry="2" fill="#e74c3c"/>
+
+  <!-- Tie -->
+  <polygon points="64,96 60,96 58,110 70,110 68,96" fill="#c0392b"/>
+
+  <!-- Suit -->
+  <rect x="48" y="96" width="32" height="32" fill="#34495e"/>
+</svg>

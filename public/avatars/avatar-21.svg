@@ -1,0 +1,28 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle - muted teal -->
+  <circle cx="64" cy="64" r="64" fill="#7fb069"/>
+
+  <!-- Face shape -->
+  <ellipse cx="64" cy="70" rx="28" ry="32" fill="#c9a96e"/>
+
+  <!-- Hair - dreadlocks -->
+  <ellipse cx="50" cy="48" rx="6" ry="25" fill="#2f1b14"/>
+  <ellipse cx="58" cy="46" rx="6" ry="27" fill="#2f1b14"/>
+  <ellipse cx="66" cy="46" rx="6" ry="27" fill="#2f1b14"/>
+  <ellipse cx="74" cy="48" rx="6" ry="25" fill="#2f1b14"/>
+  <ellipse cx="64" cy="40" rx="18" ry="15" fill="#2f1b14"/>
+
+  <!-- Eyes -->
+  <circle cx="58" cy="67" r="2" fill="#2c3e50"/>
+  <circle cx="70" cy="67" r="2" fill="#2c3e50"/>
+
+  <!-- Nose -->
+  <ellipse cx="64" cy="73" rx="2" ry="4" fill="#a0805a"/>
+
+  <!-- Mouth -->
+  <path d="M 59 80 Q 64 84 69 80" stroke="#2c3e50" stroke-width="1.5" fill="none"/>
+
+  <!-- Hoodie -->
+  <rect x="46" y="96" width="36" height="32" fill="#e74c3c"/>
+  <rect x="54" y="96" width="20" height="8" fill="#c0392b"/>
+</svg>
