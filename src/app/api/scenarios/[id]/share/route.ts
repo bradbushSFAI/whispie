@@ -32,6 +32,22 @@ export async function POST(
     return NextResponse.json({ error: 'title and description are required' }, { status: 400 })
   }
 
+  // Determine persona_id for the community copy
+  let personaId = null
+  if (original.persona_id) {
+    // Check if the referenced persona is a system persona (publicly viewable)
+    const { data: persona } = await supabase
+      .from('personas')
+      .select('source')
+      .eq('id', original.persona_id)
+      .single()
+
+    // Only preserve persona_id if it's a system persona (publicly viewable)
+    if (persona?.source === 'system') {
+      personaId = original.persona_id
+    }
+  }
+
   // Create a community copy
   const { data: communityScenario, error: createError } = await supabase
     .from('scenarios')
@@ -42,7 +58,7 @@ export async function POST(
       category: original.category,
       objectives: original.objectives,
       difficulty: original.difficulty,
-      persona_id: null,
+      persona_id: personaId,
       created_by: user.id,
       source: 'community',
       is_public: true,

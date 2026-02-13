@@ -186,7 +186,10 @@ export function CommunityContent() {
           ))}
         </div>
       ) : (
-        <EmptyState />
+        <EmptyState
+          viewMode={viewMode}
+          hasSearchOrFilter={debouncedSearchTerm.trim() !== '' || category !== 'all'}
+        />
       )}
 
       {/* Pagination */}
@@ -223,21 +226,60 @@ export function CommunityContent() {
   )
 }
 
-function EmptyState() {
+type EmptyStateProps = {
+  viewMode: 'all' | 'mine'
+  hasSearchOrFilter: boolean
+}
+
+function EmptyState({ viewMode, hasSearchOrFilter }: EmptyStateProps) {
+  // Determine message based on current state
+  const getEmptyStateContent = () => {
+    if (hasSearchOrFilter) {
+      return {
+        emoji: '🔍',
+        title: 'No scenarios found',
+        description: 'No scenarios found. Try a different search or filter.',
+        buttonText: 'Clear Filters',
+        buttonHref: '/community' // Clear by navigating to clean community page
+      }
+    }
+
+    if (viewMode === 'mine') {
+      return {
+        emoji: '📤',
+        title: 'You haven\'t shared any scenarios yet',
+        description: 'Share a scenario from your hub to see it here.',
+        buttonText: 'My Scenarios',
+        buttonHref: '/scenarios/my'
+      }
+    }
+
+    // viewMode === 'all'
+    return {
+      emoji: '📋',
+      title: 'No community scenarios yet',
+      description: 'Be the first to share!',
+      buttonText: 'My Scenarios',
+      buttonHref: '/scenarios/my'
+    }
+  }
+
+  const content = getEmptyStateContent()
+
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
-      <span className="text-5xl mb-4">📋</span>
+      <span className="text-5xl mb-4">{content.emoji}</span>
       <h3 className="text-white font-bold text-lg mb-2">
-        No community scenarios yet
+        {content.title}
       </h3>
       <p className="text-slate-400 text-sm max-w-xs">
-        No shared scenarios yet. Community scenarios will appear here once shared.
+        {content.description}
       </p>
       <Link
-        href="/scenarios/my"
+        href={content.buttonHref}
         className="mt-4 px-6 py-2.5 rounded-xl bg-whispie-primary text-background-dark font-bold text-sm hover:brightness-110 transition-all"
       >
-        My Scenarios
+        {content.buttonText}
       </Link>
     </div>
   )
