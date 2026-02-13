@@ -112,9 +112,9 @@ function LoginForm() {
         </Button>
       </CardContent>
       <CardFooter className="justify-center">
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-slate-400">
           Don&apos;t have an account?{' '}
-          <Link href="/signup" className="font-medium text-slate-900 hover:underline">
+          <Link href="/signup" className="font-medium text-whispie-primary hover:underline">
             Sign up
           </Link>
         </p>

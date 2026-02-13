@@ -32,7 +32,7 @@ export function CommunityFilters({
   return (
     <div className="space-y-3">
       {/* Category tabs */}
-      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide justify-center">
         {CATEGORIES.map(category => (
           <button
             key={category.key}
