@@ -48,6 +48,7 @@ export async function PATCH(
     difficulty,
     custom_qa,
     tags,
+    avatar_url,
   } = body
 
   // RLS ensures only own personas can be updated
@@ -62,6 +63,7 @@ export async function PATCH(
       ...(difficulty !== undefined && { difficulty }),
       ...(custom_qa !== undefined && { custom_qa }),
       ...(tags !== undefined && { tags }),
+      ...(avatar_url !== undefined && { avatar_url }),
     })
     .eq('id', id)
     .select()
