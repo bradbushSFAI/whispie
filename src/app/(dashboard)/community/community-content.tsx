@@ -5,10 +5,12 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { CommunityFilters } from '@/components/community/community-filters'
 import { CommunityScenarioCard } from '@/components/community/community-scenario-card'
+import { useUser } from '@/hooks/use-user'
 import type { Scenario } from '@/types/database'
 
 export function CommunityContent() {
   const router = useRouter()
+  const { user } = useUser()
   const [category, setCategory] = useState('all')
   const [sort, setSort] = useState('upvotes')
 
@@ -53,6 +55,11 @@ export function CommunityContent() {
     } finally {
       setCloningId(null)
     }
+  }
+
+  const handleScenarioDeleted = (scenarioId: string) => {
+    setScenarios(prev => prev.filter(scenario => scenario.id !== scenarioId))
+    setScenarioTotal(prev => prev - 1)
   }
 
   return (
@@ -102,6 +109,8 @@ export function CommunityContent() {
               initialVoted={scenarioVotes.includes(scenario.id)}
               onTryIt={handleTryScenario}
               isCloning={cloningId === scenario.id}
+              currentUserId={user?.id}
+              onDeleted={handleScenarioDeleted}
             />
           ))}
         </div>

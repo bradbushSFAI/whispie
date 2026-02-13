@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useVote } from '@/hooks/use-vote'
 import { getPersonaAvatarUrl } from '@/lib/utils'
 import type { Scenario } from '@/types/database'
@@ -23,9 +24,12 @@ type CommunityScenarioCardProps = {
   initialVoted: boolean
   onTryIt: (scenarioId: string) => void
   isCloning: boolean
+  currentUserId?: string
+  onDeleted?: (id: string) => void
 }
 
-export function CommunityScenarioCard({ scenario, initialVoted, onTryIt, isCloning }: CommunityScenarioCardProps) {
+export function CommunityScenarioCard({ scenario, initialVoted, onTryIt, isCloning, currentUserId, onDeleted }: CommunityScenarioCardProps) {
+  const [isDeleting, setIsDeleting] = useState(false)
   const difficulty = difficultyConfig[scenario.difficulty]
   const persona = Array.isArray(scenario.persona) ? scenario.persona[0] : scenario.persona
   const { hasVoted, voteCount, toggleVote, isLoading: isVoting } = useVote({
@@ -34,6 +38,29 @@ export function CommunityScenarioCard({ scenario, initialVoted, onTryIt, isCloni
     initialVoted,
     initialCount: scenario.upvotes || 0,
   })
+
+  const canDelete = currentUserId && scenario.created_by === currentUserId
+
+  const handleDelete = async () => {
+    if (!window.confirm('Remove from community?')) {
+      return
+    }
+
+    setIsDeleting(true)
+    try {
+      const res = await fetch(`/api/community/scenarios/${scenario.id}`, {
+        method: 'DELETE'
+      })
+      
+      if (res.ok) {
+        onDeleted?.(scenario.id)
+      }
+    } catch (error) {
+      console.error('Failed to delete scenario:', error)
+    } finally {
+      setIsDeleting(false)
+    }
+  }
 
   // Get the persona type badge from tags
   const personaType = persona?.tags?.find((tag: string) => personaTypeConfig[tag as keyof typeof personaTypeConfig])
@@ -106,13 +133,32 @@ export function CommunityScenarioCard({ scenario, initialVoted, onTryIt, isCloni
           </button>
         </div>
 
-        <button
-          onClick={() => onTryIt(scenario.id)}
-          disabled={isCloning}
-          className="text-xs px-4 py-2 rounded-lg bg-whispie-primary text-background-dark font-bold hover:brightness-110 transition-all disabled:opacity-50"
-        >
-          {isCloning ? '...' : 'Try It'}
-        </button>
+        <div className="flex items-center gap-2">
+          {canDelete && (
+            <button
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-900/20 text-red-400 hover:bg-red-900/40 transition-all disabled:opacity-50"
+              title="Remove from community"
+            >
+              {isDeleting ? (
+                <div className="w-3 h-3 border border-red-400 border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              )}
+            </button>
+          )}
+          
+          <button
+            onClick={() => onTryIt(scenario.id)}
+            disabled={isCloning}
+            className="text-xs px-4 py-2 rounded-lg bg-whispie-primary text-background-dark font-bold hover:brightness-110 transition-all disabled:opacity-50"
+          >
+            {isCloning ? '...' : 'Try It'}
+          </button>
+        </div>
       </div>
     </div>
   )
