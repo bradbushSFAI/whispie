@@ -42,6 +42,7 @@ export default async function HubPage() {
         .select('id, title, description, context, objectives, category, difficulty, persona_id, created_at')
         .in('persona_id', personaIds)
         .eq('is_active', true)
+        .or('source.is.null,source.neq.community')
         .order('created_at', { ascending: false })
     : { data: [] }
 

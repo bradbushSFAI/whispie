@@ -42,7 +42,7 @@ export async function POST(
       category: original.category,
       objectives: original.objectives,
       difficulty: original.difficulty,
-      persona_id: original.persona_id,
+      persona_id: null,
       created_by: user.id,
       source: 'community',
       is_public: true,
