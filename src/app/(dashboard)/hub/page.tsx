@@ -39,7 +39,7 @@ export default async function HubPage() {
   const { data: personaScenarios } = personaIds.length > 0
     ? await supabase
         .from('scenarios')
-        .select('id, title, category, difficulty, persona_id, created_at')
+        .select('id, title, description, context, objectives, category, difficulty, persona_id, created_at')
         .in('persona_id', personaIds)
         .eq('is_active', true)
         .order('created_at', { ascending: false })
