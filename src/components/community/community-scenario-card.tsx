@@ -20,7 +20,10 @@ const personaTypeConfig = {
 }
 
 type CommunityScenarioCardProps = {
-  scenario: Scenario & { persona?: { id: string; name: string; title: string; difficulty: string; tags: string[] | null; avatar_url: string | null } | null }
+  scenario: Scenario & {
+    persona?: { id: string; name: string; title: string; difficulty: string; tags: string[] | null; avatar_url: string | null } | null
+    creator?: { display_name: string } | null
+  }
   initialVoted: boolean
   onTryIt: (scenarioId: string) => void
   isCloning: boolean
@@ -71,10 +74,10 @@ export function CommunityScenarioCard({ scenario, initialVoted, onTryIt, isCloni
       {/* Top row: Persona info with avatar */}
       {persona && (
         <div className="flex items-center gap-3 mb-3">
-          <img 
+          <img
             src={getPersonaAvatarUrl(persona.name, persona.avatar_url)}
             alt={`${persona.name} avatar`}
-            className="w-10 h-10 rounded-full object-cover border-2 border-white/10"
+            className="w-12 h-12 rounded-xl object-cover ring-1 ring-white/10"
           />
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
@@ -92,6 +95,19 @@ export function CommunityScenarioCard({ scenario, initialVoted, onTryIt, isCloni
           </div>
         </div>
       )}
+
+      {/* Creator info */}
+      <div className="mb-3">
+        <p className="text-slate-300 text-xs">
+          Created by {
+            scenario.created_by === currentUserId
+              ? 'you'
+              : Array.isArray(scenario.creator)
+                ? scenario.creator[0]?.display_name || 'Community Member'
+                : scenario.creator?.display_name || 'Community Member'
+          }
+        </p>
+      </div>
 
       {/* Middle: Scenario title and category */}
       <div className="mb-3">

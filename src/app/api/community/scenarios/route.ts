@@ -15,16 +15,26 @@ export async function GET(request: NextRequest) {
   const page = parseInt(searchParams.get('page') || '1')
   const limit = parseInt(searchParams.get('limit') || '20')
   const offset = (page - 1) * limit
+  const userOnly = searchParams.get('userOnly') === 'true'
+  const search = searchParams.get('search')
 
   let query = supabase
     .from('scenarios')
-    .select('*, persona:personas(id, name, title, difficulty, tags, avatar_url)', { count: 'exact' })
+    .select('*, persona:personas(id, name, title, difficulty, tags, avatar_url), creator:profiles!created_by(display_name)', { count: 'exact' })
     .eq('source', 'community')
     .eq('is_public', true)
     .eq('is_active', true)
 
   if (category && category !== 'all') {
     query = query.eq('category', category)
+  }
+
+  if (userOnly) {
+    query = query.eq('created_by', user.id)
+  }
+
+  if (search) {
+    query = query.ilike('title', `%${search}%`)
   }
 
   if (sort === 'upvotes') {
