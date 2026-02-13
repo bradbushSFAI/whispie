@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { NavHeader } from '@/components/layout/nav-header'
 import { PersonaActions } from '../personas/my/persona-actions'
 import { ScenarioActions } from '@/components/scenarios/scenario-actions'
+import { getPersonaAvatarUrl } from '@/lib/utils'
 import type { Persona, Scenario } from '@/types/database'
 
 const difficultyConfig = {
@@ -138,14 +139,21 @@ export default async function HubPage() {
                     className="bg-surface-dark rounded-2xl p-5 border border-white/5"
                   >
                     <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-white font-bold text-lg truncate">{persona.name}</h3>
-                          <span className={`${difficulty.bg} ${difficulty.text} text-[10px] font-bold px-2 py-0.5 rounded-full`}>
-                            {difficulty.label}
-                          </span>
+                      <div className="flex gap-3 flex-1 min-w-0">
+                        {/* Avatar */}
+                        <div className="size-10 rounded-full bg-subtle-dark flex items-center justify-center text-sm overflow-hidden shrink-0">
+                          <img src={getPersonaAvatarUrl(persona.name, persona.avatar_url)} alt={persona.name} className="w-full h-full object-cover" />
                         </div>
-                        <p className="text-slate-400 text-sm">{persona.title}</p>
+                        {/* Name and title */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="text-white font-bold text-lg truncate">{persona.name}</h3>
+                            <span className={`${difficulty.bg} ${difficulty.text} text-[10px] font-bold px-2 py-0.5 rounded-full`}>
+                              {difficulty.label}
+                            </span>
+                          </div>
+                          <p className="text-slate-400 text-sm">{persona.title}</p>
+                        </div>
                       </div>
                       <PersonaActions persona={persona} scenarioCount={linkedScenarios.length} />
                     </div>
