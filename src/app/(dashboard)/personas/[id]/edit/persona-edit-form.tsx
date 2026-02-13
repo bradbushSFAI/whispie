@@ -10,6 +10,7 @@ import { QAEditor } from '@/components/personas/qa-editor'
 import { AvatarPicker } from '@/components/personas/avatar-picker'
 import { ALL_TRAITS, COMMUNICATION_STYLES } from '@/lib/personas/relationship-types'
 import type { Persona, CustomQA } from '@/types/database'
+import { getPersonaAvatarUrl } from '@/lib/utils'
 
 type LinkedScenario = {
   id: string
@@ -34,7 +35,7 @@ export function PersonaEditForm({
   const [commStyle, setCommStyle] = useState(persona.communication_style)
   const [difficulty, setDifficulty] = useState(persona.difficulty)
   const [customQa, setCustomQa] = useState<CustomQA[]>(persona.custom_qa || [])
-  const [avatarUrl, setAvatarUrl] = useState(persona.avatar_url || '')
+  const [avatarUrl, setAvatarUrl] = useState(getPersonaAvatarUrl(persona.name, persona.avatar_url))
   const [isSaving, setIsSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 

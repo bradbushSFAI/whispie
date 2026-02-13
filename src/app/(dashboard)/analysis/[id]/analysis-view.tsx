@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { DimensionTooltip } from '@/components/analysis/dimension-tooltip'
 import type { Analysis, Conversation, Scenario, Persona } from '@/types/database'
+import { getPersonaAvatarUrl } from '@/lib/utils'
 
 type ConversationWithDetails = Conversation & {
   scenario: Scenario
@@ -414,8 +415,8 @@ export function AnalysisView({
         <div className="py-4">
           <div className="bg-surface-dark rounded-xl p-4 border border-white/5">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-full bg-subtle-dark flex items-center justify-center text-lg">
-                {persona.name.charAt(0)}
+              <div className="w-10 h-10 rounded-full bg-subtle-dark flex items-center justify-center text-lg overflow-hidden">
+                <img src={getPersonaAvatarUrl(persona.name, persona.avatar_url)} alt={persona.name} className="w-full h-full object-cover" />
               </div>
               <div>
                 <h3 className="text-sm font-bold text-white">{persona.name}</h3>

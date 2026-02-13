@@ -2,25 +2,10 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import { getPersonaAvatarUrl } from '@/lib/utils'
 
 // Generate array of avatar filenames
 const AVATAR_OPTIONS = Array.from({ length: 30 }, (_, i) => `avatar-${String(i + 1).padStart(2, '0')}.webp`)
-
-function hashString(str: string): number {
-  let hash = 0
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i)
-    hash = ((hash << 5) - hash) + char
-    hash = hash & hash // Convert to 32-bit integer
-  }
-  return Math.abs(hash)
-}
-
-function getDefaultAvatar(personaName: string): string {
-  const hash = hashString(personaName)
-  const index = hash % AVATAR_OPTIONS.length
-  return `/avatars/${AVATAR_OPTIONS[index]}`
-}
 
 type AvatarPickerProps = {
   value?: string
@@ -30,11 +15,10 @@ type AvatarPickerProps = {
 
 export function AvatarPicker({ value, onChange, personaName = '' }: AvatarPickerProps) {
   // Default to hash-based selection if no value provided
-  const defaultAvatar = getDefaultAvatar(personaName)
-  const selectedAvatar = value || defaultAvatar
+  const selectedAvatar = getPersonaAvatarUrl(personaName, value)
 
   // Update parent when default changes
-  if (!value && personaName && selectedAvatar !== value) {
+  if (!value && personaName) {
     onChange(selectedAvatar)
   }
 

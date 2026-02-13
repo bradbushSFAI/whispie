@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { Message, Conversation, Scenario, Persona } from '@/types/database'
+import { getPersonaAvatarUrl } from '@/lib/utils'
 
 type ConversationWithDetails = Conversation & {
   scenario: Scenario
@@ -268,11 +269,7 @@ export function ChatInterface({
         <div className="mt-4 flex flex-col items-center gap-3">
           <div className="relative">
             <div className="size-16 rounded-full bg-subtle-dark flex items-center justify-center text-2xl ring-2 ring-red-500/30 overflow-hidden">
-              {persona.avatar_url ? (
-                <img src={persona.avatar_url} alt={persona.name} className="w-full h-full object-cover" />
-              ) : (
-                persona.name.charAt(0)
-              )}
+              <img src={getPersonaAvatarUrl(persona.name, persona.avatar_url)} alt={persona.name} className="w-full h-full object-cover" />
             </div>
           </div>
           <div className="text-center">
@@ -329,11 +326,7 @@ export function ChatInterface({
               {message.role === 'assistant' && (
                 <div className="shrink-0 flex flex-col justify-end">
                   <div className="size-8 rounded-full bg-subtle-dark flex items-center justify-center text-sm opacity-80 overflow-hidden">
-                    {persona.avatar_url ? (
-                      <img src={persona.avatar_url} alt="" className="w-full h-full object-cover" />
-                    ) : (
-                      persona.name.charAt(0)
-                    )}
+                    <img src={getPersonaAvatarUrl(persona.name, persona.avatar_url)} alt="" className="w-full h-full object-cover" />
                   </div>
                 </div>
               )}
@@ -382,11 +375,7 @@ export function ChatInterface({
           <div className="flex gap-3 max-w-[90%]">
             <div className="shrink-0 flex flex-col justify-end">
               <div className="size-8 rounded-full bg-subtle-dark flex items-center justify-center text-sm opacity-80 overflow-hidden">
-                {persona.avatar_url ? (
-                  <img src={persona.avatar_url} alt="" className="w-full h-full object-cover" />
-                ) : (
-                  persona.name.charAt(0)
-                )}
+                <img src={getPersonaAvatarUrl(persona.name, persona.avatar_url)} alt="" className="w-full h-full object-cover" />
               </div>
             </div>
             <div className="flex flex-col gap-1 items-start">

@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import type { Scenario, Persona } from '@/types/database'
+import { getPersonaAvatarUrl } from '@/lib/utils'
 
 type ScenarioWithPersona = Scenario & {
   persona: Persona | null
@@ -51,12 +52,10 @@ export function ScenarioCard({
           {/* Avatar placeholder */}
           <div className="shrink-0 relative">
             <div className="w-16 h-16 rounded-xl bg-gray-200 dark:bg-subtle-dark overflow-hidden ring-1 ring-black/5 dark:ring-white/10 flex items-center justify-center">
-              {scenario.persona?.avatar_url ? (
-                <img src={scenario.persona.avatar_url} alt={scenario.persona.name} className="w-full h-full object-cover" />
+              {scenario.persona ? (
+                <img src={getPersonaAvatarUrl(scenario.persona.name, scenario.persona.avatar_url)} alt={scenario.persona.name} className="w-full h-full object-cover" />
               ) : (
-                <span className="text-2xl">
-                  {scenario.persona?.name.charAt(0) || '?'}
-                </span>
+                <span className="text-2xl">?</span>
               )}
             </div>
             <div className={`absolute -bottom-2 -right-2 ${difficulty.bg} ${difficulty.text} text-[10px] font-bold px-2 py-0.5 rounded-full ring-2 ring-white dark:ring-surface-dark`}>
