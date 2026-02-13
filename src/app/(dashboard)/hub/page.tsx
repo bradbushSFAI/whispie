@@ -48,6 +48,9 @@ export default async function HubPage() {
   const scenariosByPersona = new Map<string, Array<{
     id: string
     title: string
+    description: string
+    context: string
+    objectives: string[]
     category: string
     difficulty: 'easy' | 'medium' | 'hard'
     created_at: string
@@ -58,6 +61,9 @@ export default async function HubPage() {
     list.push({
       id: s.id,
       title: s.title,
+      description: s.description || '',
+      context: s.context || '',
+      objectives: s.objectives || [],
       category: s.category,
       difficulty: s.difficulty as 'easy' | 'medium' | 'hard',
       created_at: s.created_at
@@ -187,9 +193,9 @@ export default async function HubPage() {
                             title: scenario.title,
                             category: scenario.category,
                             difficulty: scenario.difficulty,
-                            description: '', // Not needed for actions
-                            context: '', // Not needed for actions
-                            objectives: [], // Not needed for actions
+                            description: scenario.description || '',
+                            context: scenario.context || '',
+                            objectives: scenario.objectives || [],
                             persona_id: persona.id,
                             estimated_turns: 0, // Not needed for actions
                             is_premium: false, // Not needed for actions
