@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { QAEditor } from '@/components/personas/qa-editor'
+import { AvatarPicker } from '@/components/personas/avatar-picker'
 import { ALL_TRAITS, COMMUNICATION_STYLES } from '@/lib/personas/relationship-types'
 import type { Persona, CustomQA } from '@/types/database'
 
@@ -33,6 +34,7 @@ export function PersonaEditForm({
   const [commStyle, setCommStyle] = useState(persona.communication_style)
   const [difficulty, setDifficulty] = useState(persona.difficulty)
   const [customQa, setCustomQa] = useState<CustomQA[]>(persona.custom_qa || [])
+  const [avatarUrl, setAvatarUrl] = useState(persona.avatar_url || '')
   const [isSaving, setIsSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
@@ -58,6 +60,7 @@ export function PersonaEditForm({
           communication_style: commStyle,
           difficulty,
           custom_qa: customQa.filter(qa => qa.trigger.trim() && qa.response.trim()),
+          avatar_url: avatarUrl,
         }),
       })
 
@@ -117,6 +120,11 @@ export function PersonaEditForm({
               className="bg-surface-dark border-white/10 text-white"
             />
           </div>
+          <AvatarPicker
+            value={avatarUrl}
+            onChange={setAvatarUrl}
+            personaName={name}
+          />
         </section>
 
         {/* Personality */}
