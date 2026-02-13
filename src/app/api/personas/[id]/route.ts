@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 
 export async function GET(
@@ -73,6 +74,11 @@ export async function PATCH(
     console.error('Error updating persona:', error)
     return NextResponse.json({ error: 'Failed to update persona' }, { status: 500 })
   }
+
+  // Invalidate cached pages to reflect avatar changes
+  revalidatePath('/hub')
+  revalidatePath(`/personas/${id}`)
+  revalidatePath(`/personas/${id}/edit`)
 
   return NextResponse.json({ persona })
 }

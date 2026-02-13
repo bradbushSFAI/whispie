@@ -67,6 +67,7 @@ export function PersonaEditForm({
 
       if (res.ok) {
         setSaved(true)
+        router.refresh() // Force Next.js to re-fetch server data
         setTimeout(() => setSaved(false), 2000)
       }
     } finally {
