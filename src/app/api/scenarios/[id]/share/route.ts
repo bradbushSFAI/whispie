@@ -28,8 +28,8 @@ export async function POST(
   const body = await request.json()
   const { title, description, context } = body
 
-  if (!title || !description || !context) {
-    return NextResponse.json({ error: 'title, description, and context are required' }, { status: 400 })
+  if (!title || !description) {
+    return NextResponse.json({ error: 'title and description are required' }, { status: 400 })
   }
 
   // Create a community copy
@@ -38,7 +38,7 @@ export async function POST(
     .insert({
       title,
       description,
-      context,
+      context: context || '',
       category: original.category,
       objectives: original.objectives,
       difficulty: original.difficulty,
