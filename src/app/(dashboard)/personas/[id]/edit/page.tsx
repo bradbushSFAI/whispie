@@ -24,12 +24,13 @@ export default async function EditPersonaPage({
   // Only allow editing own personas
   if (persona.created_by !== user.id) redirect('/personas/my')
 
-  // Fetch linked scenarios
+  // Fetch linked scenarios (exclude community scenarios)
   const { data: scenarios } = await supabase
     .from('scenarios')
     .select('id, title, category, context, objectives')
     .eq('persona_id', id)
     .eq('is_active', true)
+    .or('source.is.null,source.eq.system,source.eq.user')
 
   return <PersonaEditForm persona={persona} scenarios={scenarios || []} />
 }

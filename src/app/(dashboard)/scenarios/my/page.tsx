@@ -25,12 +25,13 @@ export default async function MyScenariosPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  // Fetch user's scenarios with persona info
+  // Fetch user's scenarios with persona info (exclude shared community scenarios)
   const { data: scenarios } = await supabase
     .from('scenarios')
     .select('id, title, category, difficulty, persona_id, created_at, persona:personas(id, name, title)')
     .eq('created_by', user.id)
     .eq('is_active', true)
+    .or('source.is.null,source.eq.system,source.eq.user')
     .order('created_at', { ascending: false })
 
   // Fetch conversation counts per scenario

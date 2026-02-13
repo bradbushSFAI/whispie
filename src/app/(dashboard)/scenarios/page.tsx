@@ -14,7 +14,7 @@ export default async function ScenariosPage({
   // Get current user
   const { data: { user } } = await supabase.auth.getUser()
 
-  // Fetch scenarios with their personas
+  // Fetch scenarios with their personas (exclude community scenarios)
   let query = supabase
     .from('scenarios')
     .select(`
@@ -22,6 +22,7 @@ export default async function ScenariosPage({
       persona:personas(*)
     `)
     .eq('is_active', true)
+    .or('source.is.null,source.eq.system,source.eq.user')
     .order('difficulty', { ascending: true })
 
   if (category && category !== 'all') {

@@ -18,11 +18,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'scenario_id is required' }, { status: 400 })
   }
 
-  // Get scenario with persona
+  // Get scenario with persona (exclude community scenarios)
   const { data: scenario, error: scenarioError } = await supabase
     .from('scenarios')
     .select('*, persona:personas(*)')
     .eq('id', scenario_id)
+    .or('source.is.null,source.eq.system,source.eq.user')
     .single()
 
   if (scenarioError || !scenario) {

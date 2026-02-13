@@ -17,6 +17,7 @@ export async function GET(
     .from('scenarios')
     .select('*, persona:personas(id, name, title)')
     .eq('id', id)
+    .or('source.is.null,source.eq.system,source.eq.user')
     .single()
 
   if (error || !scenario) {

@@ -42,11 +42,12 @@ export default async function NewChatPage({
     }
   }
 
-  // Get scenario with persona
+  // Get scenario with persona (exclude community scenarios - those should be cloned first)
   const { data: scenario } = await supabase
     .from('scenarios')
     .select('*, persona:personas(*)')
     .eq('id', scenarioId)
+    .or('source.is.null,source.eq.system,source.eq.user')
     .single()
 
   if (!scenario) {

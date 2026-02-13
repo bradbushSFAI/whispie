@@ -95,21 +95,23 @@ export async function DELETE(
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  // Count linked scenarios for the warning / cascade
+  // Count linked scenarios for the warning / cascade (exclude community scenarios)
   const { count: scenarioCount } = await supabase
     .from('scenarios')
     .select('id', { count: 'exact', head: true })
     .eq('persona_id', id)
     .eq('created_by', user.id)
     .eq('is_active', true)
+    .or('source.is.null,source.eq.system,source.eq.user')
 
-  // Cascade: delete all linked scenarios first
+  // Cascade: delete all linked scenarios first (exclude community scenarios)
   if (scenarioCount && scenarioCount > 0) {
     const { error: scenarioDeleteError } = await supabase
       .from('scenarios')
       .delete()
       .eq('persona_id', id)
       .eq('created_by', user.id)
+      .or('source.is.null,source.eq.system,source.eq.user')
 
     if (scenarioDeleteError) {
       console.error('Error deleting linked scenarios:', scenarioDeleteError)
