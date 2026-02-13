@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ScenarioShareDialog } from './share-dialog'
@@ -13,12 +13,50 @@ type ScenarioActionsProps = {
   practiceCount: number
 }
 
+// Custom hook for sticky tooltip behavior
+function useStickyTooltip(stickyDuration = 3000) {
+  const [isOpen, setIsOpen] = useState(false)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  const handleOpenChange = useCallback((open: boolean) => {
+    if (open) {
+      // Clear any existing timeout when opening
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+        timeoutRef.current = null
+      }
+      setIsOpen(true)
+    } else {
+      // Set timeout to close after sticky duration
+      timeoutRef.current = setTimeout(() => {
+        setIsOpen(false)
+        timeoutRef.current = null
+      }, stickyDuration)
+    }
+  }, [stickyDuration])
+
+  const forceClose = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+      timeoutRef.current = null
+    }
+    setIsOpen(false)
+  }, [])
+
+  return { isOpen, handleOpenChange, forceClose }
+}
+
 export function ScenarioActions({ scenario, isLastScenario, practiceCount }: ScenarioActionsProps) {
   const router = useRouter()
   const [isDeleting, setIsDeleting] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
   const [showShare, setShowShare] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // Sticky tooltip states
+  const editTooltip = useStickyTooltip(3000)
+  const shareTooltip = useStickyTooltip(3000)
+  const deleteTooltip = useStickyTooltip(3000)
 
   const handleDelete = async () => {
     setIsDeleting(true)
@@ -72,11 +110,17 @@ export function ScenarioActions({ scenario, isLastScenario, practiceCount }: Sce
           ) : (
             <>
               {/* Edit button */}
-              <Tooltip delayDuration={0} disableHoverableContent={false}>
+              <Tooltip 
+                open={editTooltip.isOpen} 
+                onOpenChange={editTooltip.handleOpenChange}
+                delayDuration={0} 
+                disableHoverableContent={false}
+              >
                 <TooltipTrigger asChild>
                   <Link
                     href={`/personas/${scenario.persona_id}/edit`}
                     className="p-1.5 rounded-lg text-slate-500 hover:text-white hover:bg-white/5 transition-colors"
+                    onClick={editTooltip.forceClose}
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -88,10 +132,18 @@ export function ScenarioActions({ scenario, isLastScenario, practiceCount }: Sce
                 </TooltipContent>
               </Tooltip>
               {/* Share button */}
-              <Tooltip delayDuration={0} disableHoverableContent={false}>
+              <Tooltip 
+                open={shareTooltip.isOpen} 
+                onOpenChange={shareTooltip.handleOpenChange}
+                delayDuration={0} 
+                disableHoverableContent={false}
+              >
                 <TooltipTrigger asChild>
                   <button
-                    onClick={() => setShowShare(true)}
+                    onClick={() => {
+                      shareTooltip.forceClose()
+                      setShowShare(true)
+                    }}
                     className="p-1.5 rounded-lg text-slate-500 hover:text-whispie-primary hover:bg-white/5 transition-colors"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,10 +156,18 @@ export function ScenarioActions({ scenario, isLastScenario, practiceCount }: Sce
                 </TooltipContent>
               </Tooltip>
               {/* Delete button */}
-              <Tooltip delayDuration={0} disableHoverableContent={false}>
+              <Tooltip 
+                open={deleteTooltip.isOpen} 
+                onOpenChange={deleteTooltip.handleOpenChange}
+                delayDuration={0} 
+                disableHoverableContent={false}
+              >
                 <TooltipTrigger asChild>
                   <button
-                    onClick={() => setShowConfirm(true)}
+                    onClick={() => {
+                      deleteTooltip.forceClose()
+                      setShowConfirm(true)
+                    }}
                     disabled={isLastScenario}
                     className={`p-1.5 rounded-lg transition-colors ${
                       isLastScenario
