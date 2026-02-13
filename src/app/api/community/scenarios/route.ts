@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   }
 
   const { searchParams } = new URL(request.url)
-  const tag = searchParams.get('tag')
+  const category = searchParams.get('category')
   const sort = searchParams.get('sort') || 'upvotes'
   const page = parseInt(searchParams.get('page') || '1')
   const limit = parseInt(searchParams.get('limit') || '20')
@@ -18,14 +18,13 @@ export async function GET(request: NextRequest) {
 
   let query = supabase
     .from('scenarios')
-    .select('*, persona:personas(id, name, title, difficulty)', { count: 'exact' })
+    .select('*, persona:personas(id, name, title, difficulty, tags, avatar_url)', { count: 'exact' })
     .eq('source', 'community')
     .eq('is_public', true)
     .eq('is_active', true)
 
-  if (tag && tag !== 'all') {
-    // Filter by persona tag via a subquery isn't easy, so we filter client-side for now
-    // For tag filtering, we join persona and check tags
+  if (category && category !== 'all') {
+    query = query.eq('category', category)
   }
 
   if (sort === 'upvotes') {

@@ -1,12 +1,13 @@
 'use client'
 
-const TAGS = [
+const CATEGORIES = [
   { key: 'all', label: 'All' },
-  { key: 'boss', label: 'Boss' },
-  { key: 'peer', label: 'Coworker' },
-  { key: 'employee', label: 'Employee' },
-  { key: 'client', label: 'Client' },
-  { key: 'hr', label: 'HR' },
+  { key: 'conflict', label: 'Conflict' },
+  { key: 'negotiation', label: 'Negotiation' },
+  { key: 'feedback', label: 'Feedback' },
+  { key: 'leadership', label: 'Leadership' },
+  { key: 'teamwork', label: 'Teamwork' },
+  { key: 'other', label: 'Other' },
 ]
 
 const SORTS = [
@@ -16,33 +17,33 @@ const SORTS = [
 ]
 
 type CommunityFiltersProps = {
-  currentTag: string
+  currentCategory: string
   currentSort: string
-  onTagChange: (tag: string) => void
+  onCategoryChange: (category: string) => void
   onSortChange: (sort: string) => void
 }
 
 export function CommunityFilters({
-  currentTag,
+  currentCategory,
   currentSort,
-  onTagChange,
+  onCategoryChange,
   onSortChange,
 }: CommunityFiltersProps) {
   return (
     <div className="space-y-3">
       {/* Category tabs */}
       <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-        {TAGS.map(tag => (
+        {CATEGORIES.map(category => (
           <button
-            key={tag.key}
-            onClick={() => onTagChange(tag.key)}
+            key={category.key}
+            onClick={() => onCategoryChange(category.key)}
             className={`px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
-              currentTag === tag.key
+              currentCategory === category.key
                 ? 'bg-whispie-primary text-background-dark'
                 : 'bg-surface-dark text-slate-300 border border-white/10 hover:border-white/20'
             }`}
           >
-            {tag.label}
+            {category.label}
           </button>
         ))}
       </div>

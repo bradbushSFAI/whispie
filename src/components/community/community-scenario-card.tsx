@@ -1,6 +1,7 @@
 'use client'
 
 import { useVote } from '@/hooks/use-vote'
+import { getPersonaAvatarUrl } from '@/lib/utils'
 import type { Scenario } from '@/types/database'
 
 const difficultyConfig = {
@@ -9,8 +10,16 @@ const difficultyConfig = {
   hard: { label: 'HARD', bg: 'bg-red-900/30', text: 'text-red-400' },
 }
 
+const personaTypeConfig = {
+  boss: { label: 'BOSS', bg: 'bg-purple-900/30', text: 'text-purple-400' },
+  peer: { label: 'COWORKER', bg: 'bg-blue-900/30', text: 'text-blue-400' },
+  employee: { label: 'EMPLOYEE', bg: 'bg-emerald-900/30', text: 'text-emerald-400' },
+  client: { label: 'CLIENT', bg: 'bg-orange-900/30', text: 'text-orange-400' },
+  hr: { label: 'HR', bg: 'bg-pink-900/30', text: 'text-pink-400' },
+}
+
 type CommunityScenarioCardProps = {
-  scenario: Scenario & { persona?: { id: string; name: string; title: string; difficulty: string } | null }
+  scenario: Scenario & { persona?: { id: string; name: string; title: string; difficulty: string; tags: string[] | null; avatar_url: string | null } | null }
   initialVoted: boolean
   onTryIt: (scenarioId: string) => void
   isCloning: boolean
@@ -26,56 +35,81 @@ export function CommunityScenarioCard({ scenario, initialVoted, onTryIt, isCloni
     initialCount: scenario.upvotes || 0,
   })
 
+  // Get the persona type badge from tags
+  const personaType = persona?.tags?.find((tag: string) => personaTypeConfig[tag as keyof typeof personaTypeConfig])
+  const personaTypeStyle = personaType ? personaTypeConfig[personaType as keyof typeof personaTypeConfig] : null
+
   return (
     <div className="bg-surface-dark rounded-2xl p-5 border border-white/5">
-      <div className="flex items-start justify-between mb-2">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-semibold text-whispie-primary uppercase tracking-wider">
-              {scenario.category}
-            </span>
-            <span className={`${difficulty.bg} ${difficulty.text} text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0`}>
-              {difficulty.label}
-            </span>
+      {/* Top row: Persona info with avatar */}
+      {persona && (
+        <div className="flex items-center gap-3 mb-3">
+          <img 
+            src={getPersonaAvatarUrl(persona.name, persona.avatar_url)}
+            alt={`${persona.name} avatar`}
+            className="w-10 h-10 rounded-full object-cover border-2 border-white/10"
+          />
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-white font-semibold text-sm">{persona.name}</span>
+              {personaTypeStyle && (
+                <span className={`${personaTypeStyle.bg} ${personaTypeStyle.text} text-[10px] font-bold px-2 py-0.5 rounded-full`}>
+                  {personaTypeStyle.label}
+                </span>
+              )}
+              <span className={`${difficulty.bg} ${difficulty.text} text-[10px] font-bold px-2 py-0.5 rounded-full`}>
+                {difficulty.label}
+              </span>
+            </div>
+            <p className="text-slate-400 text-xs">{persona.title}</p>
           </div>
-          <h3 className="text-white font-bold text-lg truncate">{scenario.title}</h3>
-          {persona && (
-            <p className="text-slate-400 text-sm">with {persona.name} — {persona.title}</p>
-          )}
         </div>
-
-        {/* Upvote button */}
-        <button
-          onClick={toggleVote}
-          disabled={isVoting}
-          className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-sm font-medium transition-all shrink-0 ml-3 ${
-            hasVoted
-              ? 'bg-whispie-primary/20 text-whispie-primary'
-              : 'bg-white/5 text-slate-400 hover:text-whispie-primary hover:bg-whispie-primary/10'
-          }`}
-        >
-          <svg className="w-4 h-4" fill={hasVoted ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-          </svg>
-          {voteCount}
-        </button>
-      </div>
-
-      {/* Description */}
-      {scenario.context && (
-        <p className="text-slate-400 text-sm line-clamp-2 mb-3">{scenario.context}</p>
       )}
 
-      {/* Stats + actions */}
-      <div className="flex items-center justify-between mt-3">
-        <div className="flex items-center gap-3 text-xs text-slate-500">
-          <span>{scenario.use_count || 0} uses</span>
-          <span>{scenario.objectives?.length || 0} objectives</span>
+      {/* Middle: Scenario title and category */}
+      <div className="mb-3">
+        <div className="flex items-center gap-2 mb-2">
+          <h3 className="text-white font-bold text-lg flex-1">{scenario.title}</h3>
+          <span className="text-xs font-semibold text-whispie-primary uppercase tracking-wider px-2 py-1 bg-whispie-primary/10 rounded-md">
+            {scenario.category}
+          </span>
         </div>
+
+        {/* Description */}
+        {scenario.context && (
+          <p className="text-slate-400 text-sm line-clamp-2">{scenario.context}</p>
+        )}
+      </div>
+
+      {/* Bottom: Stats and actions */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 text-xs text-slate-500">
+            <span>{scenario.objectives?.length || 0} objectives</span>
+            <span>{scenario.use_count || 0} uses</span>
+          </div>
+          
+          {/* Upvote button */}
+          <button
+            onClick={toggleVote}
+            disabled={isVoting}
+            className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium transition-all ${
+              hasVoted
+                ? 'bg-whispie-primary/20 text-whispie-primary'
+                : 'bg-white/5 text-slate-400 hover:text-whispie-primary hover:bg-whispie-primary/10'
+            }`}
+          >
+            <svg className="w-3 h-3" fill={hasVoted ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+            </svg>
+            {voteCount}
+          </button>
+        </div>
+
         <button
           onClick={() => onTryIt(scenario.id)}
           disabled={isCloning}
-          className="text-xs px-4 py-1.5 rounded-lg bg-whispie-primary text-background-dark font-bold hover:brightness-110 transition-all disabled:opacity-50"
+          className="text-xs px-4 py-2 rounded-lg bg-whispie-primary text-background-dark font-bold hover:brightness-110 transition-all disabled:opacity-50"
         >
           {isCloning ? '...' : 'Try It'}
         </button>
