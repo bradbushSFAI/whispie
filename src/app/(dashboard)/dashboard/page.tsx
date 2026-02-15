@@ -5,6 +5,7 @@ import { levelProgress, xpForLevel, levelTitle } from '@/lib/gamification'
 import { isStreakAtRisk } from '@/lib/gamification/streaks'
 import { ConversationList } from '@/components/dashboard/conversation-list'
 import { NavHeader } from '@/components/layout/nav-header'
+import { PostHogIdentify } from '@/lib/posthog'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -54,6 +55,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-background-dark">
+      <PostHogIdentify userId={user.id} properties={{ email: user.email, display_name: profile?.display_name, tier: profile?.tier }} />
       <NavHeader displayName={profile?.display_name || user.email?.split('@')[0] || 'User'} />
 
       <main className="max-w-2xl mx-auto px-4 py-6 pb-24">

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { Message, Conversation, Scenario, Persona } from '@/types/database'
 import { getPersonaAvatarUrl } from '@/lib/utils'
+import { trackScenarioStarted, trackConversationCompleted } from '@/lib/posthog'
 
 type ConversationWithDetails = Conversation & {
   scenario: Scenario
@@ -94,12 +95,13 @@ export function ChatInterface({
     }
   }, [conversation.id])
 
-  // Start conversation if no messages
+  // Track scenario started and start conversation if no messages
   useEffect(() => {
+    trackScenarioStarted(conversation.scenario_id || '', conversation.scenario.title, conversation.scenario.category)
     if (initialMessages.length === 0) {
       startConversation()
     }
-  }, [initialMessages.length, startConversation])
+  }, [initialMessages.length, startConversation, conversation.scenario_id, conversation.scenario.title, conversation.scenario.category])
 
   // Auto-focus input after AI finishes responding
   useEffect(() => {
@@ -258,7 +260,10 @@ export function ChatInterface({
             </div>
           </div>
           <button
-            onClick={() => router.push(`/analysis/${conversation.id}`)}
+            onClick={() => {
+              trackConversationCompleted(conversation.id, conversation.scenario_id || '', messages.length)
+              router.push(`/analysis/${conversation.id}`)
+            }}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-whispie-primary/10 hover:bg-whispie-primary/20 text-whispie-primary transition-colors"
           >
             <span className="text-xs font-bold">End</span>
@@ -418,7 +423,10 @@ export function ChatInterface({
 
             {/* End Conversation Button */}
             <button
-              onClick={() => router.push(`/analysis/${conversation.id}`)}
+              onClick={() => {
+                trackConversationCompleted(conversation.id, conversation.scenario_id || '', messages.length)
+                router.push(`/analysis/${conversation.id}`)
+              }}
               disabled={isLoading}
               className="shrink-0 size-10 flex items-center justify-center rounded-full bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               title="End conversation"

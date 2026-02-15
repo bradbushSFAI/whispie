@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { DimensionTooltip } from '@/components/analysis/dimension-tooltip'
 import type { Analysis, Conversation, Scenario, Persona } from '@/types/database'
 import { getPersonaAvatarUrl } from '@/lib/utils'
+import { trackAnalysisViewed } from '@/lib/posthog'
 
 type ConversationWithDetails = Conversation & {
   scenario: Scenario
@@ -239,6 +240,13 @@ export function AnalysisView({
       generateAnalysis()
     }
   }, [initialAnalysis, generateAnalysis])
+
+  // Track analysis viewed when analysis is available
+  useEffect(() => {
+    if (analysis) {
+      trackAnalysisViewed(conversation.id, analysis.overall_score)
+    }
+  }, [analysis, conversation.id])
 
   // Scroll to top on mount
   useEffect(() => {

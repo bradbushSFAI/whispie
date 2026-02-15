@@ -14,7 +14,7 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
         capture_pageleave: true,
         loaded: (posthog) => {
           if (process.env.NODE_ENV === 'development') {
-            // Disable in development by default
+            // Disable in development
             posthog.opt_out_capturing()
           }
         },
